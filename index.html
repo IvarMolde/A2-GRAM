@@ -652,6 +652,17 @@
       const pctBad = Math.round((s.ov / total) * 100);
       return { ...s, total, done, pct, pctOk, pctBad };
     }
+    function quizProgress() {
+      const total = state.quiz.list.length;
+      const answered = Object.values(state.quiz.answered);
+      const done = answered.length;
+      const ok = answered.filter((a) => a.ok).length;
+      const bad = done - ok;
+      const pct = total ? Math.round((done / total) * 100) : 0;
+      const pctOk = total ? Math.round((ok / total) * 100) : 0;
+      const pctBad = total ? Math.round((bad / total) * 100) : 0;
+      return { total, done, ok, bad, pct, pctOk, pctBad };
+    }
     function openFavorite(ruleId) {
       const idx = visible().findIndex((r) => r.id === ruleId);
       if (idx < 0) return;
@@ -759,9 +770,11 @@
       if (needsQ) needsQ.addEventListener("click", () => { startQuiz("needs"); render(); });
     }
     function renderProgress() {
-      const p = progress();
+      const p = state.tab === "quiz" ? quizProgress() : progress();
       const panel = document.getElementById("progressPanel");
-      panel.innerHTML = `<div class="progress-head"><strong>Progresjon</strong><span id="progressText">${p.done} / ${p.total} vurdert (${p.pct}%)</span></div><div class="progress-track"><div class="progress-stack"><div class="progress-fill-ok" style="width:${p.pctOk}%"></div><div class="progress-fill-bad" style="width:${p.pctBad}%"></div></div></div><div class="progress-legend"><span class="legend-ok">Riktig: ${p.kan}</span><span class="legend-bad">Feil: ${p.ov}</span><span>Favoritter: ${p.liked}</span></div><div class="status" role="status">${state.msg}</div>`;
+      panel.innerHTML = state.tab === "quiz"
+        ? `<div class="progress-head"><strong>Quizprogresjon</strong><span id="progressText">${p.done} / ${p.total} besvart (${p.pct}%)</span></div><div class="progress-track"><div class="progress-stack"><div class="progress-fill-ok" style="width:${p.pctOk}%"></div><div class="progress-fill-bad" style="width:${p.pctBad}%"></div></div></div><div class="progress-legend"><span class="legend-ok">Riktig: ${p.ok}</span><span class="legend-bad">Feil: ${p.bad}</span><span>Spørsmål: ${Math.min(state.quiz.i + 1, p.total || 0)} / ${p.total}</span></div><div class="status" role="status">${state.msg}</div>`
+        : `<div class="progress-head"><strong>Progresjon</strong><span id="progressText">${p.done} / ${p.total} vurdert (${p.pct}%)</span></div><div class="progress-track"><div class="progress-stack"><div class="progress-fill-ok" style="width:${p.pctOk}%"></div><div class="progress-fill-bad" style="width:${p.pctBad}%"></div></div></div><div class="progress-legend"><span class="legend-ok">Riktig: ${p.kan}</span><span class="legend-bad">Feil: ${p.ov}</span><span>Favoritter: ${p.liked}</span></div><div class="status" role="status">${state.msg}</div>`;
       const announcer = document.getElementById("srAnnouncer");
       if (announcer) announcer.textContent = state.msg;
     }
