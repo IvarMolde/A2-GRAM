@@ -458,6 +458,18 @@
           e: rule.r
         };
       }
+      if (rule.id === 30) {
+        return {
+          qid: `r${rule.id}`,
+          id: rule.id,
+          type: "fill",
+          p: "Fyll inn riktig ord",
+          c: "fra",
+          sentence: "Hun kommer ____ Polen.",
+          options: ["på", "under", "fra", "over"],
+          e: rule.r
+        };
+      }
       const type = rule.id % 2 === 0 ? "fill" : "choice";
       if (type === "fill") {
         const target = getFillTarget(rule);
