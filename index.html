@@ -584,6 +584,17 @@
           e: rule.r
         };
       }
+      if (rule.id === 40) {
+        return {
+          qid: `r${rule.id}`,
+          id: rule.id,
+          type: "choice",
+          p: "Velg riktig verbform",
+          c: "Kom",
+          o: ["Kom", "Kommer", "Har kommet"],
+          e: rule.r
+        };
+      }
       const type = rule.id % 2 === 0 ? "fill" : "choice";
       if (type === "fill") {
         const target = getFillTarget(rule);
