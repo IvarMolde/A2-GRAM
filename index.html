@@ -30,6 +30,7 @@
     .tab { min-height: 44px; border: 2px solid #cfe4f0; border-radius: .7rem; background: #fff; color: #11384e; font-weight: 700; padding: .55rem .8rem; cursor: pointer; }
     .tab[aria-selected="true"] { background: var(--primary); color: #fff; border-color: var(--primary); }
     main { padding: 1rem; }
+    footer { text-align: center; color: var(--muted); font-size: .9rem; padding: .8rem 1rem 1.2rem; }
     .grid { width: min(900px, 100%); margin: 0 auto; display: grid; gap: .75rem; grid-template-columns: 1fr; }
     .card { background: var(--surface); border: 1px solid var(--border); border-radius: 1rem; padding: 1rem; box-shadow: 0 8px 24px rgba(0,0,0,.08); }
     .rule-card { position: relative; }
@@ -86,7 +87,7 @@
   <header>
     <div class="wrap">
       <h1>Tindergram</h1>
-      <p class="sub">Responsiv grammatikkapp i bokmål for voksne på CEFR A2.</p>
+      <p class="sub">Grammatikkap på bokmål for voksne. Norsknivå A2.</p>
       <nav id="tabs" class="tabs" aria-label="Sider" role="tablist"></nav>
     </div>
   </header>
@@ -96,6 +97,7 @@
       <section id="mainPanel" class="card" aria-live="polite"></section>
     </div>
   </main>
+  <footer>© Laget av Ivar Øverland</footer>
 
   <script>
     const TABS = [
