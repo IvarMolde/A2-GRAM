@@ -12,6 +12,7 @@ Responsiv grammatikkapp for voksne deltakere på norsk nivå A2 (CEFR), med svei
 - Quiz med både flervalg og fyll inn ord
 - Tilgjengelighetsbaseline (WCAG): fokusmarkering, tastaturstøtte, skip-link, alternativ til sveip
 - CI med GitHub Actions som kjører statiske tester på push/PR
+- Automatisk deploy til GitHub Pages på push til `main`
 
 ## Kjøring
 

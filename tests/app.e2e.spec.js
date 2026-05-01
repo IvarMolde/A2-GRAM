@@ -24,3 +24,29 @@ test('quiz tab renders question content', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Quizmodus' })).toBeVisible();
   await expect(page.getByText('Spørsmål 1 av')).toBeVisible();
 });
+
+test('keyboard navigation can reach primary controls', async ({ page }) => {
+  await page.goto('/');
+
+  await page.keyboard.press('Tab'); // skip link
+  await page.keyboard.press('Tab'); // first tab button
+  await page.keyboard.press('Tab'); // second tab button
+  await page.keyboard.press('Tab'); // third tab button
+  await page.keyboard.press('Tab'); // fourth tab button
+  await page.keyboard.press('Tab'); // fifth tab button
+  await page.keyboard.press('Tab'); // first card control
+
+  await expect(page.locator(':focus')).toHaveText(/Forrige|Angre|Gjør om/);
+});
+
+test('arrow keys trigger swipe decisions', async ({ page }) => {
+  await page.goto('/');
+
+  const before = page.locator('#sidePanel .stat strong').first();
+  await expect(before).toContainText('0');
+
+  await page.keyboard.press('ArrowRight');
+
+  const after = page.locator('#sidePanel .stat strong').first();
+  await expect(after).toContainText('1');
+});
