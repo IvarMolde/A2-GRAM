@@ -6,12 +6,12 @@ test('shows app title and rule card', async ({ page }) => {
   await expect(page.getByRole('heading', { name: /Helsetning \(V2\)/ })).toBeVisible();
 });
 
-test('can mark a rule and see progress change', async ({ page }) => {
+test('can mark a rule with ov mer and see progress change', async ({ page }) => {
   await page.goto('/');
 
   await expect(page.locator('#progressText')).toContainText('0 / 40');
 
-  await page.getByRole('button', { name: 'Kan' }).click();
+  await page.getByRole('button', { name: 'Øv mer' }).click();
 
   await expect(page.locator('#progressText')).toContainText('1 / 40');
 });

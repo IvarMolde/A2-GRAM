@@ -297,10 +297,10 @@
         <div class="warn"><strong>Vanlig feil:</strong> ${r.m}</div>
         <div class="ok"><strong>Riktig form:</strong> ${r.c}</div>
         <div class="actions3">
-          <button class="btn" id="prev">Forrige</button><button class="btn" id="undo">Angre</button><button class="btn" id="redo">Gjør om</button>
+          <button class="btn" id="prev">Forrige</button><button class="btn" id="undo">Angre</button><button class="btn" id="next">Neste</button>
         </div>
         <div class="actions">
-          <button class="btn primary" id="kan">Kan</button><button class="btn" id="ov">Øv mer</button>
+          <button class="btn" id="ov">Øv mer</button>
         </div>
         <p class="muted">Sveip venstre = neste kort. Sveip høyre = forrige kort.</p>
       `;
@@ -339,10 +339,10 @@
     function bindLearn(r) {
       if (!r) return;
       const on = (id, fn) => { const el = document.getElementById(id); if (el) el.addEventListener("click", fn); };
-      on("kan", () => decide(r.id, "kan")); on("ov", () => decide(r.id, "ov"));
+      on("ov", () => decide(r.id, "ov"));
       on("topLike", () => tLike(r.id));
-      on("prev", prevCard);
-      on("undo", undo); on("redo", redo);
+      on("prev", prevCard); on("next", nextCard);
+      on("undo", undo);
     }
     function bindQuiz() {
       const q = state.quiz.list[state.quiz.i];
