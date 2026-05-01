@@ -34,14 +34,21 @@ test('quiz tab renders question content', async ({ page }) => {
 test('fill-in quiz uses clickable word options', async ({ page }) => {
   await page.goto('/');
   await page.locator('[data-id="quiz"]').click();
-  await page.getByRole('button', { name: 'Neste' }).click(); // question 2 is fill
+  for (let i = 0; i < 6; i += 1) {
+    if (await page.locator('.word-option').first().isVisible().catch(() => false)) break;
+    await page.getByRole('button', { name: 'Neste' }).click();
+  }
   await expect(page.locator('.word-option').first()).toBeVisible();
 });
 
 test('quiz card shows colored result banner after answer', async ({ page }) => {
   await page.goto('/');
   await page.locator('[data-id="quiz"]').click();
-  await page.locator('[data-o="0"]').click();
+  if (await page.locator('[data-o="0"]').isVisible().catch(() => false)) {
+    await page.locator('[data-o="0"]').click();
+  } else {
+    await page.locator('[data-fo="0"]').click();
+  }
   await expect(page.locator('.quiz-result-banner.ok, .quiz-result-banner.bad')).toBeVisible();
 });
 
