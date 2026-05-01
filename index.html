@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="no">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tindergram - A2 grammatikk</title>
+  <style>
+    :root {
+      --bg: #f3f6fa;
+      --surface: #fff;
+      --text: #15212b;
+      --muted: #46586a;
+      --primary: #0b5d88;
+      --primary-dark: #094564;
+      --border: #d3dee9;
+      --ok: #0f7c43;
+      --warn: #8d4f00;
+      --focus: #1c7ed6;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Inter, "Segoe UI", Arial, sans-serif; background: var(--bg); color: var(--text); }
+    .skip { position: absolute; left: .5rem; top: -100%; background: #fff; color: #000; border: 2px solid #000; padding: .6rem; z-index: 1000; }
+    .skip:focus { top: .5rem; }
+    :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+    header { background: linear-gradient(90deg, #0b4f72, #0b5d88); color: #fff; padding: 1rem; }
+    .wrap { width: min(1100px, 100%); margin: 0 auto; }
+    h1 { margin: 0; font-size: clamp(1.4rem, 5vw, 2rem); }
+    .sub { margin: .3rem 0 0; color: #e7f1f9; }
+    .tabs { margin-top: .8rem; display: flex; flex-wrap: wrap; gap: .5rem; }
+    .tab { min-height: 44px; border: 2px solid #cfe4f0; border-radius: .7rem; background: #fff; color: #11384e; font-weight: 700; padding: .55rem .8rem; cursor: pointer; }
+    .tab[aria-selected="true"] { background: var(--primary); color: #fff; border-color: var(--primary); }
+    main { padding: 1rem; }
+    .grid { width: min(1100px, 100%); margin: 0 auto; display: grid; gap: 1rem; grid-template-columns: 1fr; }
+    @media (min-width: 960px) { .grid { grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr); } }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 1rem; padding: 1rem; box-shadow: 0 8px 24px rgba(0,0,0,.08); }
+    .title { margin: .2rem 0 .6rem; font-size: clamp(1.1rem, 2.8vw, 1.45rem); }
+    .muted { color: var(--muted); font-size: .95rem; }
+    .chips { display: flex; flex-wrap: wrap; gap: .45rem; margin-bottom: .7rem; }
+    .chip { border-radius: 99px; padding: .3rem .65rem; background: #eef4fa; border: 1px solid #d8e3ec; font-size: .85rem; }
+    .box { border-radius: .7rem; border: 1px solid #d8e7f3; background: #f8fbff; padding: .7rem; margin-top: .7rem; }
+    .warn { border-left: 4px solid var(--warn); background: #fff8ea; border-radius: .5rem; padding: .65rem; margin-top: .7rem; }
+    .ok { border-left: 4px solid var(--ok); background: #edf8f2; border-radius: .5rem; padding: .65rem; margin-top: .5rem; }
+    .actions { display: grid; gap: .55rem; grid-template-columns: repeat(2, minmax(0,1fr)); margin-top: .85rem; }
+    .actions3 { display: grid; gap: .55rem; grid-template-columns: repeat(3, minmax(0,1fr)); margin-top: .85rem; }
+    button.btn { min-height: 44px; border-radius: .7rem; border: 2px solid var(--border); background: #fff; color: #17364b; font-weight: 700; cursor: pointer; }
+    button.btn.primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+    button.btn.primary:hover { background: var(--primary-dark); }
+    .list { list-style: none; padding: 0; margin: .7rem 0 0; display: grid; gap: .55rem; }
+    .list li { border: 1px solid var(--border); border-radius: .7rem; padding: .6rem; }
+    .row { display: flex; gap: .5rem; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+    .stats { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: .5rem; margin-top: .8rem; }
+    .stat { border: 1px solid var(--border); border-radius: .6rem; background: #fafcff; padding: .55rem; min-height: 62px; }
+    .stat strong { display: block; color: #0f3f5d; font-size: 1.1rem; }
+    .status { margin-top: .8rem; border-radius: .6rem; border: 1px solid #b8d9ea; background: #eef8ff; color: #0c4b70; min-height: 44px; padding: .55rem; }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip">Hopp til innhold</a>
+  <header>
+    <div class="wrap">
+      <h1>Tindergram</h1>
+      <p class="sub">Responsiv grammatikkapp i bokmål for voksne på CEFR A2.</p>
+      <nav id="tabs" class="tabs" aria-label="Sider"></nav>
+    </div>
+  </header>
+  <main id="main" tabindex="-1">
+    <div class="grid">
+      <section id="mainPanel" class="card" aria-live="polite"></section>
+      <aside id="sidePanel" class="card"></aside>
+    </div>
+  </main>
+
+  <script>
+    const TABS = [
+      { id: "learn", label: "Sveip" },
+      { id: "quiz", label: "Quiz" },
+      { id: "saved", label: "Lagret" },
+      { id: "liked", label: "Favoritter" },
+      { id: "hidden", label: "Skjult" },
+    ];
+    const STORE = "tindergram-a2-v1";
+    const RULES = [
+      { id: 1, t: "Helsetning (V2)", r: "I helsetning står verbet på plass 2.", ex: ["Jeg bor i Oslo.", "Vi lærer norsk."], m: "Jeg i Oslo bor.", c: "Jeg bor i Oslo." },
+      { id: 2, t: "Inversjon", r: "Når tid/sted står først, kommer verb før subjekt.", ex: ["I dag jobber jeg hjemme.", "På mandag skal vi ha prøve."], m: "I dag jeg jobber hjemme.", c: "I dag jobber jeg hjemme." },
+      { id: 3, t: "Ja/nei-spørsmål", r: "I ja/nei-spørsmål står verbet først.", ex: ["Bor du i Norge?", "Kommer han i morgen?"], m: "Du bor i Norge?", c: "Bor du i Norge?" },
+      { id: 4, t: "Spørreord", r: "Etter spørreord kommer verb før subjekt.", ex: ["Hvor bor du?", "Når starter kurset?"], m: "Hvor du bor?", c: "Hvor bor du?" },
+      { id: 5, t: "Negasjon i helsetning", r: "Ikke står vanligvis etter verbet.", ex: ["Jeg kommer ikke i dag.", "Hun snakker ikke engelsk."], m: "Jeg ikke kommer i dag.", c: "Jeg kommer ikke i dag." },
+      { id: 6, t: "Negasjon i leddsetning", r: "I leddsetning står ikke før verbet.", ex: ["Jeg tror at hun ikke kommer.", "Han er hjemme fordi han ikke er syk."], m: "Hun kommer ikke.", c: "Hun ikke kommer." },
+      { id: 7, t: "Ubestemt entall", r: "Bruk en/ei/et når noe er nytt.", ex: ["Jeg har en bil.", "Hun kjøper et brød."], m: "Jeg har bil.", c: "Jeg har en bil." },
+      { id: 8, t: "Bestemt entall", r: "Bestemt form får -en/-a/-et.", ex: ["Bilen er ny.", "Huset er stort."], m: "Bil er ny.", c: "Bilen er ny." },
+      { id: 9, t: "Ubestemt flertall", r: "Mange substantiv får -er i flertall.", ex: ["to biler", "mange elever"], m: "to bil", c: "to biler" },
+      { id: 10, t: "Bestemt flertall", r: "Bestemt flertall er ofte -ene/-a.", ex: ["Bilene er dyre.", "Jentene kommer nå."], m: "Bilene er dyr.", c: "Bilene er dyre." },
+      { id: 11, t: "Adjektiv med en-ord", r: "Adjektiv uten endelse i ubestemt entall.", ex: ["en stor bil", "en ny jakke"], m: "en stort bil", c: "en stor bil" },
+      { id: 12, t: "Adjektiv med et-ord", r: "Adjektiv får -t med et-ord.", ex: ["et stort hus", "et fint bilde"], m: "et stor hus", c: "et stort hus" },
+      { id: 13, t: "Adjektiv i flertall", r: "Adjektiv får ofte -e i flertall.", ex: ["store hus", "hyggelige mennesker"], m: "stor hus", c: "store hus" },
+      { id: 14, t: "Adjektiv i bestemt form", r: "Bruk den/det/de + adjektiv med -e.", ex: ["den nye læreren", "det store huset"], m: "den ny læreren", c: "den nye læreren" },
+      { id: 15, t: "Presens", r: "Presens uttrykker nåtid.", ex: ["Jeg jobber i butikk.", "Hun leser hver kveld."], m: "Jeg jobb i butikk.", c: "Jeg jobber i butikk." },
+      { id: 16, t: "Preteritum", r: "Preteritum brukes om avsluttet fortid.", ex: ["Jeg snakket med naboen i går.", "Vi kjøpte mat."], m: "Jeg snakker i går.", c: "Jeg snakket i går." },
+      { id: 17, t: "Perfektum", r: "Perfektum er har + partisipp.", ex: ["Jeg har bodd i Norge i to år.", "Hun har lest boka."], m: "Jeg har bo i Norge.", c: "Jeg har bodd i Norge." },
+      { id: 18, t: "Perfektum med tidsord", r: "Bruk gjerne allerede/ennå.", ex: ["Jeg har allerede spist.", "Vi har ikke gjort leksa ennå."], m: "Jeg spiste allerede.", c: "Jeg har allerede spist." },
+      { id: 19, t: "Modalverb kan", r: "Etter kan står infinitiv uten å.", ex: ["Jeg kan svømme.", "Hun kan snakke norsk."], m: "Jeg kan å svømme.", c: "Jeg kan svømme." },
+      { id: 20, t: "Modalverb må", r: "Må uttrykker plikt/nødvendighet.", ex: ["Jeg må gå nå.", "Du må komme presis."], m: "Du må å komme.", c: "Du må komme." },
+      { id: 21, t: "Modalverb vil", r: "Vil uttrykker ønske/fremtid.", ex: ["Jeg vil lære mer norsk.", "Vi vil reise i sommer."], m: "Jeg vil å lære.", c: "Jeg vil lære." },
+      { id: 22, t: "Modalverb skal", r: "Skal brukes om planer.", ex: ["Jeg skal møte legen.", "Barna skal legge seg tidlig."], m: "Jeg skal å møte.", c: "Jeg skal møte." },
+      { id: 23, t: "Infinitiv med å", r: "Mange verb tar å + infinitiv.", ex: ["Jeg liker å lese.", "Det er viktig å sove nok."], m: "Jeg liker lese.", c: "Jeg liker å lese." },
+      { id: 24, t: "Ingen å etter modalverb", r: "Etter kan/må/vil/skal bruker vi ikke å.", ex: ["Hun må jobbe i kveld.", "Vi skal reise i morgen."], m: "Hun må å jobbe.", c: "Hun må jobbe." },
+      { id: 25, t: "Subjektpronomen", r: "Jeg, du, han, hun, vi, dere, de brukes som subjekt.", ex: ["Jeg bor her.", "De kommer snart."], m: "Meg bor her.", c: "Jeg bor her." },
+      { id: 26, t: "Objektpronomen", r: "Meg, deg, ham/han, henne, oss, dere, dem brukes som objekt.", ex: ["Kan du hjelpe meg?", "Læreren ser dem."], m: "Kan du hjelpe jeg?", c: "Kan du hjelpe meg?" },
+      { id: 27, t: "Eiendomsord etter substantiv", r: "Vanlig mønster: bilen min, boka di.", ex: ["bilen min", "barna våre"], m: "bil min", c: "bilen min" },
+      { id: 28, t: "Eiendomsord foran substantiv", r: "Foran substantiv bruker vi ubestemt form.", ex: ["min bil", "vårt hus"], m: "min bilen", c: "min bil" },
+      { id: 29, t: "Preposisjon i/på", r: "I: by/land/inne. På: flate/noen steder.", ex: ["Jeg bor i Norge.", "Boka ligger på bordet."], m: "Boka ligger i bordet.", c: "Boka ligger på bordet." },
+      { id: 30, t: "Preposisjon til/fra", r: "Til viser mål, fra viser start.", ex: ["Vi reiser til Trondheim.", "Hun kommer fra Polen."], m: "Hun kommer til Polen.", c: "Hun kommer fra Polen." },
+      { id: 31, t: "Tid: i går/i dag/i morgen", r: "Bruk riktig tidsord i setningen.", ex: ["Jeg jobbet i går.", "Vi skal trene i morgen."], m: "Jeg jobbet i morgen.", c: "Jeg jobbet i går." },
+      { id: 32, t: "Klokkeslett", r: "Bruk klokka + tid.", ex: ["Møtet starter klokka åtte.", "Bussen går klokka halv ni."], m: "Møtet starter åtte klokke.", c: "Møtet starter klokka åtte." },
+      { id: 33, t: "Leddsetning med fordi", r: "Fordi-setninger har leddsetningsordstilling.", ex: ["Jeg er hjemme fordi jeg ikke er frisk.", "Han kommer ikke fordi han ikke har tid."], m: "fordi jeg er ikke frisk", c: "fordi jeg ikke er frisk" },
+      { id: 34, t: "Leddsetning med at", r: "At-setninger følger leddsetningsordstilling.", ex: ["Jeg tror at hun ikke kommer i dag.", "Vi vet at de ikke bor her."], m: "at hun kommer ikke", c: "at hun ikke kommer" },
+      { id: 35, t: "Leddsetning med når", r: "Når brukes om tid.", ex: ["Jeg spiser når jeg kommer hjem.", "Ring meg når du er ferdig."], m: "Når jeg kommer hjem, jeg spiser.", c: "Når jeg kommer hjem, spiser jeg." },
+      { id: 36, t: "Bindeord", r: "Og, men og eller binder ord og setninger.", ex: ["Jeg vil gå tur, men det regner.", "Vil du ha te eller kaffe?"], m: "Jeg vil gå tur men, det regner.", c: "Jeg vil gå tur, men det regner." },
+      { id: 37, t: "Det er / det blir", r: "Det er: nå. Det blir: endring/fremtid.", ex: ["Det er kaldt ute.", "Det blir varmt i morgen."], m: "Det blir kaldt nå.", c: "Det er kaldt nå." },
+      { id: 38, t: "Sammenligning med enn", r: "Komparativ + enn.", ex: ["Kaffe er dyrere enn te.", "Norsk er lettere nå enn før."], m: "dyrere som te", c: "dyrere enn te" },
+      { id: 39, t: "Gradbøying av adjektiv", r: "Positiv, komparativ, superlativ.", ex: ["stor - større - størst", "fin - finere - finest"], m: "mer stor", c: "større" },
+      { id: 40, t: "Imperativ", r: "Imperativ brukes til oppfordring.", ex: ["Kom hit!", "Les teksten!"], m: "Du kom hit!", c: "Kom hit!" }
+    ];
+
+    const state = { tab: "learn", i: 0, hist: [], redo: [], msg: "Sveip eller bruk knappene.", quiz: { scope: "all", list: [], i: 0, score: 0, answered: {}, retried: {} }, user: {} };
+
+    function user(id) { if (!state.user[id]) state.user[id] = { saved: false, liked: false, hidden: false, d: null }; return state.user[id]; }
+    function visible() { return RULES.filter((r) => !user(r.id).hidden); }
+    function cur() { const v = visible(); if (!v.length) return null; if (state.i < 0) state.i = 0; if (state.i > v.length - 1) state.i = v.length - 1; return v[state.i]; }
+    function saveState() { localStorage.setItem(STORE, JSON.stringify({ user: state.user, i: state.i })); }
+    function loadState() { try { const s = JSON.parse(localStorage.getItem(STORE) || "{}"); if (s.user) state.user = s.user; if (typeof s.i === "number") state.i = s.i; } catch (_) {} }
+    function setMsg(m) { state.msg = m; render(); }
+
+    function decide(id, d) { const p = { ...user(id) }; user(id).d = d; state.hist.push({ id, p }); state.redo = []; state.i += 1; saveState(); setMsg(d === "kan" ? "Markert: Kan." : "Markert: Øv mer."); }
+    function undo() { const x = state.hist.pop(); if (!x) return setMsg("Ingen handling å angre."); state.redo.push({ id: x.id, p: { ...user(x.id) } }); state.user[x.id] = x.p; state.i -= 1; saveState(); setMsg("Handling angret."); }
+    function redo() { const x = state.redo.pop(); if (!x) return setMsg("Ingen handling å gjøre om."); state.hist.push({ id: x.id, p: { ...user(x.id) } }); state.user[x.id] = x.p; state.i += 1; saveState(); setMsg("Handling gjort om."); }
+    function tSave(id) { user(id).saved = !user(id).saved; saveState(); setMsg(user(id).saved ? "Lagret." : "Fjernet fra lagret."); }
+    function tLike(id) { user(id).liked = !user(id).liked; saveState(); setMsg(user(id).liked ? "Hjertemerket." : "Fjernet fra favoritter."); }
+    function hide(id) { user(id).hidden = true; saveState(); setMsg("Skjult for deg."); }
+    function restore(id) { user(id).hidden = false; saveState(); setMsg("Vises igjen."); }
+
+    function opt(rule) { const p = [rule.c, rule.m, rule.ex[0]].filter((v, i, arr) => arr.indexOf(v) === i); const s = rule.id % p.length; return p.map((_, i) => p[(i + s) % p.length]); }
+    function startQuiz(scope) {
+      const base = scope === "needs" ? RULES.filter((r) => user(r.id).d === "ov") : RULES.slice();
+      const src = base.length ? base : RULES.slice();
+      state.quiz = {
+        scope,
+        list: src.map((r) => ({ qid: `r${r.id}`, id: r.id, p: `Velg riktig setning (${r.t})`, c: r.c, o: opt(r), e: r.r })),
+        i: 0,
+        score: 0,
+        answered: {},
+        retried: {},
+      };
+    }
+    function sum() { return RULES.reduce((a, r) => { const u = user(r.id); if (u.saved) a.saved++; if (u.liked) a.liked++; if (u.hidden) a.hidden++; if (u.d === "kan") a.kan++; if (u.d === "ov") a.ov++; return a; }, { saved: 0, liked: 0, hidden: 0, kan: 0, ov: 0 }); }
+
+    function renderTabs() {
+      const tabs = document.getElementById("tabs");
+      tabs.innerHTML = TABS.map((t) => `<button class="tab" role="tab" aria-selected="${state.tab === t.id}" data-id="${t.id}">${t.label}</button>`).join("");
+      tabs.querySelectorAll("button").forEach((b) => b.addEventListener("click", () => { state.tab = b.dataset.id; render(); }));
+    }
+    function learnHTML(r) {
+      if (!r) return `<h2 class="title">Ingen synlige regler</h2><p class="muted">Gå til "Skjult" for å vise regler igjen.</p>`;
+      const u = user(r.id);
+      return `
+        <p class="muted">Kort ${state.i + 1} av ${visible().length} (totalt 40)</p>
+        <h2 class="title">${r.id}. ${r.t}</h2>
+        <div class="chips"><span class="chip">A2</span><span class="chip">CEFR</span><span class="chip">${u.d === "kan" ? "Kan" : u.d === "ov" ? "Øv mer" : "Ikke vurdert"}</span></div>
+        <p>${r.r}</p>
+        <div class="box"><strong>Eksempler</strong><ul>${r.ex.map((x) => `<li>${x}</li>`).join("")}</ul></div>
+        <div class="warn"><strong>Vanlig feil:</strong> ${r.m}</div>
+        <div class="ok"><strong>Riktig form:</strong> ${r.c}</div>
+        <div class="actions3">
+          <button class="btn" id="prev">Forrige</button><button class="btn" id="undo">Angre</button><button class="btn" id="redo">Gjør om</button>
+        </div>
+        <div class="actions">
+          <button class="btn primary" id="kan">Sveip høyre: Kan</button><button class="btn" id="ov">Sveip venstre: Øv mer</button>
+          <button class="btn" id="save">${u.saved ? "Fjern lagret" : "Lagre"}</button><button class="btn" id="like">${u.liked ? "Fjern hjerte" : "Hjerte"}</button>
+          <button class="btn" id="hide">Skjul</button><button class="btn" id="next">Neste</button>
+        </div>
+      `;
+    }
+    function quizHTML() {
+      const q = state.quiz.list[state.quiz.i];
+      if (!q) return `<h2 class="title">Quiz fullført</h2><p>Poeng: <strong>${state.quiz.score} av ${state.quiz.list.length}</strong></p><div class="actions"><button class="btn primary" id="restart">Start på nytt</button><button class="btn" id="needs">Bare Øv mer</button></div>`;
+      const ans = state.quiz.answered[q.qid];
+      return `
+        <p class="muted">Spørsmål ${state.quiz.i + 1} av ${state.quiz.list.length}</p>
+        <h2 class="title">Quizmodus</h2>
+        <div class="chips"><span class="chip">${state.quiz.scope === "needs" ? "Øv mer-fokus" : "Alle regler"}</span><button class="btn" id="allQ">Alle regler</button><button class="btn" id="needsQ">Bare Øv mer</button></div>
+        <p><strong>${q.p}</strong></p>
+        <div class="actions">${q.o.map((o, i) => `<button class="btn" data-o="${i}" ${ans ? "disabled" : ""}>${o}</button>`).join("")}</div>
+        <div class="status">${ans ? ans.msg : "Velg ett svar."}</div>
+        <div class="actions"><button class="btn" id="qPrev" ${state.quiz.i === 0 ? "disabled" : ""}>Forrige</button><button class="btn primary" id="qNext">${state.quiz.i >= state.quiz.list.length - 1 ? "Vis resultat" : "Neste"}</button></div>
+      `;
+    }
+    function listHTML(filter, title, txt, dAttr, btn) {
+      const items = RULES.filter(filter);
+      return `<h2 class="title">${title}</h2><p class="muted">${txt}</p><ul class="list">${items.map((r) => `<li><div class="row"><strong>${r.id}. ${r.t}</strong><button class="btn" ${dAttr}="${r.id}">${btn}</button></div><p class="muted">${r.r}</p></li>`).join("")}</ul>`;
+    }
+    function renderMain() {
+      const m = document.getElementById("mainPanel");
+      if (state.tab === "learn") { const r = cur(); m.innerHTML = learnHTML(r); bindLearn(r); return; }
+      if (state.tab === "quiz") { m.innerHTML = quizHTML(); bindQuiz(); return; }
+      if (state.tab === "saved") { m.innerHTML = listHTML((r) => user(r.id).saved, "Lagret", "Regler du har lagret.", "data-unsave", "Fjern"); m.querySelectorAll("[data-unsave]").forEach((b) => b.addEventListener("click", () => tSave(Number(b.dataset.unsave)))); return; }
+      if (state.tab === "liked") { m.innerHTML = listHTML((r) => user(r.id).liked, "Favoritter", "Regler du har hjertemerket.", "data-unlike", "Fjern"); m.querySelectorAll("[data-unlike]").forEach((b) => b.addEventListener("click", () => tLike(Number(b.dataset.unlike)))); return; }
+      m.innerHTML = listHTML((r) => user(r.id).hidden, "Skjult", "Regler du har skjult for deg.", "data-restore", "Vis igjen");
+      m.querySelectorAll("[data-restore]").forEach((b) => b.addEventListener("click", () => restore(Number(b.dataset.restore))));
+    }
+    function bindLearn(r) {
+      if (!r) return;
+      const on = (id, fn) => { const el = document.getElementById(id); if (el) el.addEventListener("click", fn); };
+      on("kan", () => decide(r.id, "kan")); on("ov", () => decide(r.id, "ov"));
+      on("save", () => tSave(r.id)); on("like", () => tLike(r.id)); on("hide", () => hide(r.id));
+      on("next", () => { state.i += 1; render(); }); on("prev", () => { state.i -= 1; render(); });
+      on("undo", undo); on("redo", redo);
+    }
+    function bindQuiz() {
+      const q = state.quiz.list[state.quiz.i];
+      document.querySelectorAll("[data-o]").forEach((b) => b.addEventListener("click", () => {
+        if (state.quiz.answered[q.qid]) return;
+        const chosen = q.o[Number(b.dataset.o)];
+        const ok = chosen === q.c;
+        if (ok) state.quiz.score += 1;
+        state.quiz.answered[q.qid] = { ok, msg: ok ? `Riktig! ${q.e}` : `Ikke helt. Riktig svar: "${q.c}". ${q.e}` };
+        if (!ok && !state.quiz.retried[q.id]) {
+          state.quiz.retried[q.id] = true;
+          state.quiz.list.push({ ...q, qid: `${q.qid}-retry`, p: `${q.p} (ny sjanse)` });
+        }
+        render();
+      }));
+      const prev = document.getElementById("qPrev"), next = document.getElementById("qNext");
+      if (prev) prev.addEventListener("click", () => { state.quiz.i -= 1; render(); });
+      if (next) next.addEventListener("click", () => { state.quiz.i += 1; render(); });
+      const restart = document.getElementById("restart"), needs = document.getElementById("needs");
+      if (restart) restart.addEventListener("click", () => { startQuiz(state.quiz.scope); render(); });
+      if (needs) needs.addEventListener("click", () => { startQuiz("needs"); render(); });
+      const allQ = document.getElementById("allQ"), needsQ = document.getElementById("needsQ");
+      if (allQ) allQ.addEventListener("click", () => { startQuiz("all"); render(); });
+      if (needsQ) needsQ.addEventListener("click", () => { startQuiz("needs"); render(); });
+    }
+    function renderSide() {
+      const s = sum(), p = document.getElementById("sidePanel");
+      p.innerHTML = `<h2 class="title">Progresjon</h2><div class="stats"><div class="stat"><strong>${s.kan}</strong>Kan</div><div class="stat"><strong>${s.ov}</strong>Øv mer</div><div class="stat"><strong>${s.saved}</strong>Lagret</div><div class="stat"><strong>${s.liked}</strong>Favoritter</div></div><div class="status" role="status">${state.msg}</div><p class="muted">WCAG-baseline: full tastaturstøtte, fokusmarkering, alternativ til sveip, responsiv layout.</p>`;
+    }
+    function render() { renderTabs(); renderMain(); renderSide(); }
+
+    document.addEventListener("keydown", (e) => {
+      if (state.tab !== "learn") return;
+      const r = cur(); if (!r) return;
+      if (e.key === "ArrowRight") decide(r.id, "kan");
+      if (e.key === "ArrowLeft") decide(r.id, "ov");
+    });
+    let sx = 0;
+    document.addEventListener("touchstart", (e) => { sx = e.changedTouches[0].clientX; }, { passive: true });
+    document.addEventListener("touchend", (e) => {
+      if (state.tab !== "learn") return;
+      const r = cur(); if (!r) return;
+      const d = e.changedTouches[0].clientX - sx;
+      if (Math.abs(d) < 50) return;
+      if (d > 0) decide(r.id, "kan");
+      if (d < 0) decide(r.id, "ov");
+    }, { passive: true });
+
+    loadState();
+    startQuiz("all");
+    render();
+  </script>
+</body>
+</html>
