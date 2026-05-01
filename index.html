@@ -187,7 +187,7 @@
       { id: 40, t: "Imperativ", r: "Imperativ brukes til oppfordring.", ex: ["Kom hit!", "Les teksten!"], m: "Du kom hit!", c: "Kom hit!" }
     ];
 
-    const state = { tab: "learn", i: 0, hist: [], redo: [], msg: "Sveip eller bruk knappene.", quiz: { scope: "all", list: [], i: 0, score: 0, answered: {}, retried: {} }, user: {} };
+    const state = { tab: "learn", i: 0, hist: [], redo: [], msg: "Sveip eller bruk knappene.", quiz: { scope: "all", list: [], i: 0, score: 0, answered: {} }, user: {} };
 
     function user(id) { if (!state.user[id]) state.user[id] = { liked: false, d: null }; return state.user[id]; }
     function visible() { return RULES; }
@@ -233,7 +233,6 @@
         i: 0,
         score: 0,
         answered: {},
-        retried: {},
       };
     }
     function getFillTarget(rule) {
@@ -711,10 +710,6 @@
       function handleAnswer(ok, rightValue) {
         if (ok) state.quiz.score += 1;
         state.quiz.answered[q.qid] = { ok, msg: ok ? `Riktig! ${q.e}` : `Ikke helt. Riktig svar: "${rightValue}". ${q.e}` };
-        if (!ok && !state.quiz.retried[q.id]) {
-          state.quiz.retried[q.id] = true;
-          state.quiz.list.push({ ...q, qid: `${q.qid}-retry`, p: `${q.p} (ny sjanse)` });
-        }
         render();
       }
       document.querySelectorAll("[data-o]").forEach((b) => b.addEventListener("click", () => {
