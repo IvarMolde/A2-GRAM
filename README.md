@@ -9,7 +9,9 @@ Responsiv grammatikkapp for voksne deltakere på norsk nivå A2 (CEFR), med svei
 - Knapper for `Kan`, `Øv mer`, `Lagre`, `Hjerte`, `Skjul`
 - Faner for lagret, favoritter og skjulte regler
 - Quizmodus med adaptiv repetisjon
+- Quiz med både flervalg og fyll inn ord
 - Tilgjengelighetsbaseline (WCAG): fokusmarkering, tastaturstøtte, skip-link, alternativ til sveip
+- CI med GitHub Actions som kjører statiske tester på push/PR
 
 ## Kjøring
 
@@ -21,4 +23,10 @@ eller via enkel lokal server:
 
 ```bash
 npx serve .
+```
+
+## Test
+
+```bash
+npm test
 ```

@@ -52,6 +52,17 @@
     .stat { border: 1px solid var(--border); border-radius: .6rem; background: #fafcff; padding: .55rem; min-height: 62px; }
     .stat strong { display: block; color: #0f3f5d; font-size: 1.1rem; }
     .status { margin-top: .8rem; border-radius: .6rem; border: 1px solid #b8d9ea; background: #eef8ff; color: #0c4b70; min-height: 44px; padding: .55rem; }
+    .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
+    input[type="text"].input {
+      width: 100%;
+      min-height: 44px;
+      border-radius: .7rem;
+      border: 2px solid var(--border);
+      padding: .55rem .7rem;
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+    }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
     }
@@ -59,11 +70,12 @@
 </head>
 <body>
   <a href="#main" class="skip">Hopp til innhold</a>
+  <div class="sr-only" id="srAnnouncer" aria-live="polite"></div>
   <header>
     <div class="wrap">
       <h1>Tindergram</h1>
       <p class="sub">Responsiv grammatikkapp i bokmål for voksne på CEFR A2.</p>
-      <nav id="tabs" class="tabs" aria-label="Sider"></nav>
+      <nav id="tabs" class="tabs" aria-label="Sider" role="tablist"></nav>
     </div>
   </header>
   <main id="main" tabindex="-1">
@@ -148,11 +160,48 @@
       const src = base.length ? base : RULES.slice();
       state.quiz = {
         scope,
-        list: src.map((r) => ({ qid: `r${r.id}`, id: r.id, p: `Velg riktig setning (${r.t})`, c: r.c, o: opt(r), e: r.r })),
+        list: src.map((r) => buildQuizItem(r)),
         i: 0,
         score: 0,
         answered: {},
         retried: {},
+      };
+    }
+    function getFillTarget(rule) {
+      const mistake = rule.m.replace(/[.,!?]/g, "").split(/\s+/);
+      const correct = rule.c.replace(/[.,!?]/g, "").split(/\s+/);
+      for (let i = 0; i < Math.min(mistake.length, correct.length); i += 1) {
+        if (mistake[i] !== correct[i] && correct[i].length > 1) return correct[i];
+      }
+      return correct[correct.length - 1] || correct[0] || "";
+    }
+    function fillPrompt(rule, target) {
+      const escaped = target.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const regex = new RegExp(`\\b${escaped}\\b`, "i");
+      return rule.c.replace(regex, "____");
+    }
+    function buildQuizItem(rule) {
+      const type = rule.id % 2 === 0 ? "fill" : "choice";
+      if (type === "fill") {
+        const target = getFillTarget(rule);
+        return {
+          qid: `r${rule.id}`,
+          id: rule.id,
+          type,
+          p: `Fyll inn riktig ord (${rule.t})`,
+          c: target,
+          sentence: fillPrompt(rule, target),
+          e: rule.r
+        };
+      }
+      return {
+        qid: `r${rule.id}`,
+        id: rule.id,
+        type,
+        p: `Velg riktig setning (${rule.t})`,
+        c: rule.c,
+        o: opt(rule),
+        e: rule.r
       };
     }
     function sum() { return RULES.reduce((a, r) => { const u = user(r.id); if (u.saved) a.saved++; if (u.liked) a.liked++; if (u.hidden) a.hidden++; if (u.d === "kan") a.kan++; if (u.d === "ov") a.ov++; return a; }, { saved: 0, liked: 0, hidden: 0, kan: 0, ov: 0 }); }
@@ -192,7 +241,10 @@
         <h2 class="title">Quizmodus</h2>
         <div class="chips"><span class="chip">${state.quiz.scope === "needs" ? "Øv mer-fokus" : "Alle regler"}</span><button class="btn" id="allQ">Alle regler</button><button class="btn" id="needsQ">Bare Øv mer</button></div>
         <p><strong>${q.p}</strong></p>
-        <div class="actions">${q.o.map((o, i) => `<button class="btn" data-o="${i}" ${ans ? "disabled" : ""}>${o}</button>`).join("")}</div>
+        ${q.type === "choice"
+          ? `<div class="actions">${q.o.map((o, i) => `<button class="btn" data-o="${i}" ${ans ? "disabled" : ""}>${o}</button>`).join("")}</div>`
+          : `<div class="box"><p class="muted">Setning:</p><p><strong>${q.sentence}</strong></p><label for="fillInput">Skriv ordet som mangler</label><input class="input" type="text" id="fillInput" ${ans ? "disabled" : ""} autocomplete="off" /><div class="actions"><button class="btn primary" id="submitFill" ${ans ? "disabled" : ""}>Sjekk svar</button></div></div>`
+        }
         <div class="status">${ans ? ans.msg : "Velg ett svar."}</div>
         <div class="actions"><button class="btn" id="qPrev" ${state.quiz.i === 0 ? "disabled" : ""}>Forrige</button><button class="btn primary" id="qNext">${state.quiz.i >= state.quiz.list.length - 1 ? "Vis resultat" : "Neste"}</button></div>
       `;
@@ -220,18 +272,30 @@
     }
     function bindQuiz() {
       const q = state.quiz.list[state.quiz.i];
-      document.querySelectorAll("[data-o]").forEach((b) => b.addEventListener("click", () => {
-        if (state.quiz.answered[q.qid]) return;
-        const chosen = q.o[Number(b.dataset.o)];
-        const ok = chosen === q.c;
+      function handleAnswer(ok, rightValue) {
         if (ok) state.quiz.score += 1;
-        state.quiz.answered[q.qid] = { ok, msg: ok ? `Riktig! ${q.e}` : `Ikke helt. Riktig svar: "${q.c}". ${q.e}` };
+        state.quiz.answered[q.qid] = { ok, msg: ok ? `Riktig! ${q.e}` : `Ikke helt. Riktig svar: "${rightValue}". ${q.e}` };
         if (!ok && !state.quiz.retried[q.id]) {
           state.quiz.retried[q.id] = true;
           state.quiz.list.push({ ...q, qid: `${q.qid}-retry`, p: `${q.p} (ny sjanse)` });
         }
         render();
+      }
+      document.querySelectorAll("[data-o]").forEach((b) => b.addEventListener("click", () => {
+        if (state.quiz.answered[q.qid]) return;
+        const chosen = q.o[Number(b.dataset.o)];
+        handleAnswer(chosen === q.c, q.c);
       }));
+      const submitFill = document.getElementById("submitFill");
+      if (submitFill) {
+        submitFill.addEventListener("click", () => {
+          if (state.quiz.answered[q.qid]) return;
+          const fillInput = document.getElementById("fillInput");
+          const value = (fillInput.value || "").trim().toLowerCase();
+          const rightValue = q.c.toLowerCase();
+          handleAnswer(value === rightValue, q.c);
+        });
+      }
       const prev = document.getElementById("qPrev"), next = document.getElementById("qNext");
       if (prev) prev.addEventListener("click", () => { state.quiz.i -= 1; render(); });
       if (next) next.addEventListener("click", () => { state.quiz.i += 1; render(); });
@@ -245,6 +309,8 @@
     function renderSide() {
       const s = sum(), p = document.getElementById("sidePanel");
       p.innerHTML = `<h2 class="title">Progresjon</h2><div class="stats"><div class="stat"><strong>${s.kan}</strong>Kan</div><div class="stat"><strong>${s.ov}</strong>Øv mer</div><div class="stat"><strong>${s.saved}</strong>Lagret</div><div class="stat"><strong>${s.liked}</strong>Favoritter</div></div><div class="status" role="status">${state.msg}</div><p class="muted">WCAG-baseline: full tastaturstøtte, fokusmarkering, alternativ til sveip, responsiv layout.</p>`;
+      const announcer = document.getElementById("srAnnouncer");
+      if (announcer) announcer.textContent = state.msg;
     }
     function render() { renderTabs(); renderMain(); renderSide(); }
 
