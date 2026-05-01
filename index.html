@@ -146,13 +146,25 @@
     function loadState() { try { const s = JSON.parse(localStorage.getItem(STORE) || "{}"); if (s.user) state.user = s.user; if (typeof s.i === "number") state.i = s.i; } catch (_) {} }
     function setMsg(m) { state.msg = m; render(); }
 
-    function decide(id, d) { const p = { ...user(id) }; user(id).d = d; state.hist.push({ id, p }); state.redo = []; state.i += 1; saveState(); setMsg(d === "kan" ? "Markert: Kan." : "Markert: Øv mer."); }
-    function undo() { const x = state.hist.pop(); if (!x) return setMsg("Ingen handling å angre."); state.redo.push({ id: x.id, p: { ...user(x.id) } }); state.user[x.id] = x.p; state.i -= 1; saveState(); setMsg("Handling angret."); }
-    function redo() { const x = state.redo.pop(); if (!x) return setMsg("Ingen handling å gjøre om."); state.hist.push({ id: x.id, p: { ...user(x.id) } }); state.user[x.id] = x.p; state.i += 1; saveState(); setMsg("Handling gjort om."); }
+    function decide(id, d) { const p = { ...user(id) }; user(id).d = d; state.hist.push({ id, p }); state.redo = []; saveState(); setMsg(d === "kan" ? "Markert: Kan." : "Markert: Øv mer."); }
+    function undo() { const x = state.hist.pop(); if (!x) return setMsg("Ingen handling å angre."); state.redo.push({ id: x.id, p: { ...user(x.id) } }); state.user[x.id] = x.p; saveState(); setMsg("Handling angret."); }
+    function redo() { const x = state.redo.pop(); if (!x) return setMsg("Ingen handling å gjøre om."); state.hist.push({ id: x.id, p: { ...user(x.id) } }); state.user[x.id] = x.p; saveState(); setMsg("Handling gjort om."); }
     function tSave(id) { user(id).saved = !user(id).saved; saveState(); setMsg(user(id).saved ? "Lagret." : "Fjernet fra lagret."); }
     function tLike(id) { user(id).liked = !user(id).liked; saveState(); setMsg(user(id).liked ? "Hjertemerket." : "Fjernet fra favoritter."); }
     function hide(id) { user(id).hidden = true; saveState(); setMsg("Skjult for deg."); }
     function restore(id) { user(id).hidden = false; saveState(); setMsg("Vises igjen."); }
+    function nextCard() {
+      if (state.i >= visible().length - 1) return setMsg("Du er på siste kort.");
+      state.i += 1;
+      saveState();
+      setMsg("Sveip høyre: neste kort.");
+    }
+    function prevCard() {
+      if (state.i <= 0) return setMsg("Du er på første kort.");
+      state.i -= 1;
+      saveState();
+      setMsg("Sveip venstre: forrige kort.");
+    }
 
     function opt(rule) { const p = [rule.c, rule.m, rule.ex[0]].filter((v, i, arr) => arr.indexOf(v) === i); const s = rule.id % p.length; return p.map((_, i) => p[(i + s) % p.length]); }
     function startQuiz(scope) {
@@ -226,10 +238,11 @@
           <button class="btn" id="prev">Forrige</button><button class="btn" id="undo">Angre</button><button class="btn" id="redo">Gjør om</button>
         </div>
         <div class="actions">
-          <button class="btn primary" id="kan">Sveip høyre: Kan</button><button class="btn" id="ov">Sveip venstre: Øv mer</button>
+          <button class="btn primary" id="kan">Kan</button><button class="btn" id="ov">Øv mer</button>
           <button class="btn" id="save">${u.saved ? "Fjern lagret" : "Lagre"}</button><button class="btn" id="like">${u.liked ? "Fjern hjerte" : "Hjerte"}</button>
           <button class="btn" id="hide">Skjul</button><button class="btn" id="next">Neste</button>
         </div>
+        <p class="muted">Sveip høyre = neste kort. Sveip venstre = forrige kort.</p>
       `;
     }
     function quizHTML() {
@@ -267,7 +280,7 @@
       const on = (id, fn) => { const el = document.getElementById(id); if (el) el.addEventListener("click", fn); };
       on("kan", () => decide(r.id, "kan")); on("ov", () => decide(r.id, "ov"));
       on("save", () => tSave(r.id)); on("like", () => tLike(r.id)); on("hide", () => hide(r.id));
-      on("next", () => { state.i += 1; render(); }); on("prev", () => { state.i -= 1; render(); });
+      on("next", nextCard); on("prev", prevCard);
       on("undo", undo); on("redo", redo);
     }
     function bindQuiz() {
@@ -317,8 +330,8 @@
     document.addEventListener("keydown", (e) => {
       if (state.tab !== "learn") return;
       const r = cur(); if (!r) return;
-      if (e.key === "ArrowRight") decide(r.id, "kan");
-      if (e.key === "ArrowLeft") decide(r.id, "ov");
+      if (e.key === "ArrowRight") nextCard();
+      if (e.key === "ArrowLeft") prevCard();
     });
     let sx = 0;
     document.addEventListener("touchstart", (e) => { sx = e.changedTouches[0].clientX; }, { passive: true });
@@ -327,8 +340,8 @@
       const r = cur(); if (!r) return;
       const d = e.changedTouches[0].clientX - sx;
       if (Math.abs(d) < 50) return;
-      if (d > 0) decide(r.id, "kan");
-      if (d < 0) decide(r.id, "ov");
+      if (d > 0) nextCard();
+      if (d < 0) prevCard();
     }, { passive: true });
 
     loadState();

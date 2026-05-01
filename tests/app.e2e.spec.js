@@ -12,7 +12,7 @@ test('can mark a rule and see progress change', async ({ page }) => {
   const before = page.locator('#sidePanel .stat strong').first();
   await expect(before).toContainText('0');
 
-  await page.getByRole('button', { name: 'Sveip høyre: Kan' }).click();
+  await page.getByRole('button', { name: 'Kan' }).click();
 
   const after = page.locator('#sidePanel .stat strong').first();
   await expect(after).toContainText('1');
@@ -39,14 +39,13 @@ test('keyboard navigation can reach primary controls', async ({ page }) => {
   await expect(page.locator(':focus')).toHaveText(/Forrige|Angre|Gjør om/);
 });
 
-test('arrow keys trigger swipe decisions', async ({ page }) => {
+test('arrow keys navigate forward and backward', async ({ page }) => {
   await page.goto('/');
-
-  const before = page.locator('#sidePanel .stat strong').first();
-  await expect(before).toContainText('0');
+  await expect(page.getByRole('heading', { name: /Helsetning \(V2\)/ })).toBeVisible();
 
   await page.keyboard.press('ArrowRight');
+  await expect(page.getByRole('heading', { name: /Inversjon/ })).toBeVisible();
 
-  const after = page.locator('#sidePanel .stat strong').first();
-  await expect(after).toContainText('1');
+  await page.keyboard.press('ArrowLeft');
+  await expect(page.getByRole('heading', { name: /Helsetning \(V2\)/ })).toBeVisible();
 });
