@@ -388,6 +388,17 @@
           e: rule.r
         };
       }
+      if (rule.id === 21) {
+        return {
+          qid: `r${rule.id}`,
+          id: rule.id,
+          type: "choice",
+          p: "Velg riktig setning",
+          c: "JEg vil lære",
+          o: ["Jeg vil å lære.", "JEg vil lære"],
+          e: rule.r
+        };
+      }
       const type = rule.id % 2 === 0 ? "fill" : "choice";
       if (type === "fill") {
         const target = getFillTarget(rule);
