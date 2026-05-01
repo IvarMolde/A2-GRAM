@@ -32,6 +32,13 @@ test('quiz tab renders question content', async ({ page }) => {
   await expect(page.getByText('Spørsmål 1 av')).toBeVisible();
 });
 
+test('fill-in quiz uses clickable word options', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('[data-id="quiz"]').click();
+  await page.getByRole('button', { name: 'Neste' }).click(); // question 2 is fill
+  await expect(page.locator('.word-option').first()).toBeVisible();
+});
+
 test('keyboard navigation can reach primary controls', async ({ page }) => {
   await page.goto('/');
 

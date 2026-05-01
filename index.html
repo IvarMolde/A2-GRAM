@@ -72,16 +72,9 @@
     .stat strong { display: block; color: #0f3f5d; font-size: 1.1rem; }
     .status { margin-top: .8rem; border-radius: .6rem; border: 1px solid #b8d9ea; background: #eef8ff; color: #0c4b70; min-height: 44px; padding: .55rem; }
     .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
-    input[type="text"].input {
-      width: 100%;
-      min-height: 44px;
-      border-radius: .7rem;
-      border: 2px solid var(--border);
-      padding: .55rem .7rem;
-      font-size: 1rem;
-      color: var(--text);
-      background: #fff;
-    }
+    .word-bank { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .6rem; }
+    .word-option { min-height: 44px; padding: .4rem .8rem; border-radius: 999px; border: 2px solid var(--border); background: #fff; color: #17364b; font-weight: 700; cursor: pointer; }
+    .word-option:hover { border-color: #7ea7bf; }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
     }
@@ -211,6 +204,28 @@
       const regex = new RegExp(`\\b${escaped}\\b`, "i");
       return rule.c.replace(regex, "____");
     }
+    function buildFillOptions(rule, target) {
+      const clean = (text) => text.replace(/[.,!?;:()]/g, "").toLowerCase().split(/\s+/).filter(Boolean);
+      const correctWords = clean(rule.c);
+      const mistakeWords = clean(rule.m);
+      const distractors = new Set();
+      for (let i = 0; i < Math.min(correctWords.length, mistakeWords.length); i += 1) {
+        if (correctWords[i] !== mistakeWords[i] && mistakeWords[i].length > 1) distractors.add(mistakeWords[i]);
+      }
+      for (const w of mistakeWords) {
+        if (w !== target.toLowerCase() && w.length > 2) distractors.add(w);
+        if (distractors.size >= 3) break;
+      }
+      for (const w of correctWords) {
+        if (w !== target.toLowerCase() && w.length > 2) distractors.add(w);
+        if (distractors.size >= 3) break;
+      }
+      const options = [target, ...Array.from(distractors).slice(0, 3)];
+      while (options.length < 4) options.push(target);
+      const unique = [...new Set(options)];
+      const seed = rule.id % unique.length;
+      return unique.map((_, i) => unique[(i + seed) % unique.length]);
+    }
     function buildQuizItem(rule) {
       const type = rule.id % 2 === 0 ? "fill" : "choice";
       if (type === "fill") {
@@ -222,6 +237,7 @@
           p: `Fyll inn riktig ord (${rule.t})`,
           c: target,
           sentence: fillPrompt(rule, target),
+          options: buildFillOptions(rule, target),
           e: rule.r
         };
       }
@@ -276,7 +292,7 @@
         <p><strong>${q.p}</strong></p>
         ${q.type === "choice"
           ? `<div class="actions">${q.o.map((o, i) => `<button class="btn" data-o="${i}" ${ans ? "disabled" : ""}>${o}</button>`).join("")}</div>`
-          : `<div class="box"><p class="muted">Setning:</p><p><strong>${q.sentence}</strong></p><label for="fillInput">Skriv ordet som mangler</label><input class="input" type="text" id="fillInput" ${ans ? "disabled" : ""} autocomplete="off" /><div class="actions"><button class="btn primary" id="submitFill" ${ans ? "disabled" : ""}>Sjekk svar</button></div></div>`
+          : `<div class="box"><p class="muted">Setning:</p><p><strong>${q.sentence}</strong></p><p class="muted">Velg ordet som passer best i konteksten:</p><div class="word-bank">${q.options.map((opt, i) => `<button class="word-option" data-fo="${i}" ${ans ? "disabled" : ""}>${opt}</button>`).join("")}</div></div>`
         }
         <div class="status">${ans ? ans.msg : "Velg ett svar."}</div>
         <div class="actions"><button class="btn" id="qPrev" ${state.quiz.i === 0 ? "disabled" : ""}>Forrige</button><button class="btn primary" id="qNext">${state.quiz.i >= state.quiz.list.length - 1 ? "Vis resultat" : "Neste"}</button></div>
@@ -321,16 +337,11 @@
         const chosen = q.o[Number(b.dataset.o)];
         handleAnswer(chosen === q.c, q.c);
       }));
-      const submitFill = document.getElementById("submitFill");
-      if (submitFill) {
-        submitFill.addEventListener("click", () => {
-          if (state.quiz.answered[q.qid]) return;
-          const fillInput = document.getElementById("fillInput");
-          const value = (fillInput.value || "").trim().toLowerCase();
-          const rightValue = q.c.toLowerCase();
-          handleAnswer(value === rightValue, q.c);
-        });
-      }
+      document.querySelectorAll("[data-fo]").forEach((b) => b.addEventListener("click", () => {
+        if (state.quiz.answered[q.qid]) return;
+        const chosen = q.options[Number(b.dataset.fo)];
+        handleAnswer(chosen.toLowerCase() === q.c.toLowerCase(), q.c);
+      }));
       const prev = document.getElementById("qPrev"), next = document.getElementById("qNext");
       if (prev) prev.addEventListener("click", () => { state.quiz.i -= 1; render(); });
       if (next) next.addEventListener("click", () => { state.quiz.i += 1; render(); });
