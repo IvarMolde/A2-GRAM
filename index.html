@@ -318,6 +318,18 @@
           e: rule.r
         };
       }
+      if (rule.id === 10) {
+        return {
+          qid: `r${rule.id}`,
+          id: rule.id,
+          type: "fill",
+          p: "Fyll inn riktig ord",
+          c: "dyre",
+          sentence: "Bilene er ___.",
+          options: ["dyr", "dyre", "dyrt"],
+          e: rule.r
+        };
+      }
       if (rule.id === 11) {
         return {
           qid: `r${rule.id}`,
