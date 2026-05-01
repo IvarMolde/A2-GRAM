@@ -554,6 +554,21 @@
           e: rule.r
         };
       }
+      if (rule.id === 38) {
+        return {
+          qid: `r${rule.id}`,
+          id: rule.id,
+          type: "choice",
+          p: "Velg riktig setning",
+          c: "Kaffe er dyrere enn te.",
+          o: [
+            "Kaffe enn te er dyrere.",
+            "Kaffe er te dyrere enn.",
+            "Kaffe er dyrere enn te."
+          ],
+          e: rule.r
+        };
+      }
       const type = rule.id % 2 === 0 ? "fill" : "choice";
       if (type === "fill") {
         const target = getFillTarget(rule);
