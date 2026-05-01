@@ -9,20 +9,17 @@ test('shows app title and rule card', async ({ page }) => {
 test('can mark a rule and see progress change', async ({ page }) => {
   await page.goto('/');
 
-  const before = page.locator('#sidePanel .stat strong').first();
-  await expect(before).toContainText('0');
+  await expect(page.locator('#progressText')).toContainText('0 / 40');
 
   await page.getByRole('button', { name: 'Kan' }).click();
 
-  const after = page.locator('#sidePanel .stat strong').first();
-  await expect(after).toContainText('1');
+  await expect(page.locator('#progressText')).toContainText('1 / 40');
 });
 
 test('heart in card header saves as favorite', async ({ page }) => {
   await page.goto('/');
   await page.locator('#topLike').click();
-  const favoritesCount = page.locator('#sidePanel .stat strong').nth(2);
-  await expect(favoritesCount).toContainText('1');
+  await expect(page.getByText('Favoritter: 1')).toBeVisible();
 });
 
 test('quiz tab renders question content', async ({ page }) => {

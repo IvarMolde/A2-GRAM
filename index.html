@@ -30,8 +30,7 @@
     .tab { min-height: 44px; border: 2px solid #cfe4f0; border-radius: .7rem; background: #fff; color: #11384e; font-weight: 700; padding: .55rem .8rem; cursor: pointer; }
     .tab[aria-selected="true"] { background: var(--primary); color: #fff; border-color: var(--primary); }
     main { padding: 1rem; }
-    .grid { width: min(1100px, 100%); margin: 0 auto; display: grid; gap: 1rem; grid-template-columns: 1fr; }
-    @media (min-width: 960px) { .grid { grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr); } }
+    .grid { width: min(900px, 100%); margin: 0 auto; display: grid; gap: .75rem; grid-template-columns: 1fr; }
     .card { background: var(--surface); border: 1px solid var(--border); border-radius: 1rem; padding: 1rem; box-shadow: 0 8px 24px rgba(0,0,0,.08); }
     .rule-card { position: relative; }
     .card-heart {
@@ -67,9 +66,10 @@
     .list { list-style: none; padding: 0; margin: .7rem 0 0; display: grid; gap: .55rem; }
     .list li { border: 1px solid var(--border); border-radius: .7rem; padding: .6rem; }
     .row { display: flex; gap: .5rem; justify-content: space-between; align-items: center; flex-wrap: wrap; }
-    .stats { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: .5rem; margin-top: .8rem; }
-    .stat { border: 1px solid var(--border); border-radius: .6rem; background: #fafcff; padding: .55rem; min-height: 62px; }
-    .stat strong { display: block; color: #0f3f5d; font-size: 1.1rem; }
+    .progress-wrap { border: 1px solid var(--border); border-radius: .8rem; background: #fff; padding: .65rem; }
+    .progress-head { display: flex; justify-content: space-between; align-items: center; gap: .5rem; font-size: .9rem; color: var(--muted); }
+    .progress-track { margin-top: .45rem; height: 10px; border-radius: 999px; background: #e6eef5; overflow: hidden; }
+    .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #0b5d88, #5ea6cb); transition: width .2s ease; }
     .status { margin-top: .8rem; border-radius: .6rem; border: 1px solid #b8d9ea; background: #eef8ff; color: #0c4b70; min-height: 44px; padding: .55rem; }
     .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
     .word-bank { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .6rem; }
@@ -92,8 +92,8 @@
   </header>
   <main id="main" tabindex="-1">
     <div class="grid">
+      <section class="progress-wrap" id="progressPanel" aria-live="polite"></section>
       <section id="mainPanel" class="card" aria-live="polite"></section>
-      <aside id="sidePanel" class="card"></aside>
     </div>
   </main>
 
@@ -247,6 +247,13 @@
       };
     }
     function sum() { return RULES.reduce((a, r) => { const u = user(r.id); if (u.liked) a.liked++; if (u.d === "kan") a.kan++; if (u.d === "ov") a.ov++; return a; }, { liked: 0, kan: 0, ov: 0 }); }
+    function progress() {
+      const s = sum();
+      const total = RULES.length;
+      const done = s.kan + s.ov;
+      const pct = Math.round((done / total) * 100);
+      return { ...s, total, done, pct };
+    }
     function openFavorite(ruleId) {
       const idx = visible().findIndex((r) => r.id === ruleId);
       if (idx < 0) return;
@@ -351,13 +358,14 @@
       if (allQ) allQ.addEventListener("click", () => { startQuiz("all"); render(); });
       if (needsQ) needsQ.addEventListener("click", () => { startQuiz("needs"); render(); });
     }
-    function renderSide() {
-      const s = sum(), p = document.getElementById("sidePanel");
-      p.innerHTML = `<h2 class="title">Progresjon</h2><div class="stats"><div class="stat"><strong>${s.kan}</strong>Kan</div><div class="stat"><strong>${s.ov}</strong>Øv mer</div><div class="stat"><strong>${s.liked}</strong>Favoritter</div></div><div class="status" role="status">${state.msg}</div><p class="muted">WCAG-baseline: full tastaturstøtte, fokusmarkering, alternativ til sveip, responsiv layout.</p>`;
+    function renderProgress() {
+      const p = progress();
+      const panel = document.getElementById("progressPanel");
+      panel.innerHTML = `<div class="progress-head"><strong>Progresjon</strong><span id="progressText">${p.done} / ${p.total} vurdert (${p.pct}%)</span></div><div class="progress-track"><div class="progress-fill" style="width:${p.pct}%"></div></div><div class="progress-head" style="margin-top:.45rem;"><span>Kan: ${p.kan} · Øv mer: ${p.ov}</span><span>Favoritter: ${p.liked}</span></div><div class="status" role="status">${state.msg}</div>`;
       const announcer = document.getElementById("srAnnouncer");
       if (announcer) announcer.textContent = state.msg;
     }
-    function render() { renderTabs(); renderMain(); renderSide(); }
+    function render() { renderTabs(); renderMain(); renderProgress(); }
 
     document.addEventListener("keydown", (e) => {
       if (state.tab !== "learn") return;
