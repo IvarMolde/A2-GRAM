@@ -435,6 +435,18 @@
           e: rule.r
         };
       }
+      if (rule.id === 28) {
+        return {
+          qid: `r${rule.id}`,
+          id: rule.id,
+          type: "fill",
+          p: "Fyll inn riktig ord",
+          c: "bil",
+          sentence: "Det er min ___",
+          options: ["bil", "bilen", "biler", "bilene"],
+          e: rule.r
+        };
+      }
       const type = rule.id % 2 === 0 ? "fill" : "choice";
       if (type === "fill") {
         const target = getFillTarget(rule);
