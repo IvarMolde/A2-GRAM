@@ -716,7 +716,7 @@
         <p class="muted">Spørsmål ${state.quiz.i + 1} av ${state.quiz.list.length}</p>
         <h2 class="title">Quizmodus</h2>
         ${resultBanner}
-        <p><strong>${q.p}</strong></p>
+        <p><strong>${q.p.replace(/\s*\([^)]*\)\.?/g, "").trim()}</strong></p>
         ${q.type === "choice"
           ? `<div class="actions">${q.o.map((o, i) => `<button class="btn" data-o="${i}" ${ans ? "disabled" : ""}>${o}</button>`).join("")}</div>`
           : `<div class="box"><p class="muted">Setning:</p><p><strong>${q.sentence}</strong></p><p class="muted">Velg ordet som passer best i konteksten:</p><div class="word-bank">${q.options.map((opt, i) => `<button class="word-option" data-fo="${i}" ${ans ? "disabled" : ""}>${opt}</button>`).join("")}</div></div>`
