@@ -539,6 +539,21 @@
           e: rule.r
         };
       }
+      if (rule.id === 37) {
+        return {
+          qid: `r${rule.id}`,
+          id: rule.id,
+          type: "choice",
+          p: "Velg riktig setning",
+          c: "Det blir kaldt i morgen",
+          o: [
+            "Det blir kaldt i går",
+            "Det blir kaldt i morgen",
+            "Det er kaldt i morgen"
+          ],
+          e: rule.r
+        };
+      }
       const type = rule.id % 2 === 0 ? "fill" : "choice";
       if (type === "fill") {
         const target = getFillTarget(rule);
