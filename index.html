@@ -699,11 +699,8 @@
         <div class="box"><strong>Eksempler</strong><ul>${r.ex.map((x) => `<li>${x}</li>`).join("")}</ul></div>
         <div class="warn"><strong>Vanlig feil:</strong> ${r.m}</div>
         <div class="ok"><strong>Riktig form:</strong> ${r.c}</div>
-        <div class="actions3">
-          <button class="btn" id="prev">Forrige</button><button class="btn" id="undo">Angre</button><button class="btn" id="next">Neste</button>
-        </div>
         <div class="actions">
-          <button class="btn" id="ov">Øv mer</button>
+          <button class="btn" id="prev">Forrige</button><button class="btn primary" id="next">Neste</button>
         </div>
         <p class="muted">Sveip venstre = neste kort. Sveip høyre = forrige kort.</p>
       `;
@@ -746,10 +743,8 @@
     function bindLearn(r) {
       if (!r) return;
       const on = (id, fn) => { const el = document.getElementById(id); if (el) el.addEventListener("click", fn); };
-      on("ov", () => decide(r.id, "ov"));
       on("topLike", () => tLike(r.id));
       on("prev", prevCard); on("next", nextCard);
-      on("undo", undo);
     }
     function bindQuiz() {
       const q = state.quiz.list[state.quiz.i];
@@ -778,8 +773,16 @@
       if (needs) needs.addEventListener("click", () => { startQuiz("needs"); render(); });
     }
     function renderProgress() {
-      const p = state.tab === "quiz" ? quizProgress() : progress();
       const panel = document.getElementById("progressPanel");
+      if (state.tab !== "quiz") {
+        panel.innerHTML = "";
+        panel.hidden = true;
+        const announcer = document.getElementById("srAnnouncer");
+        if (announcer) announcer.textContent = state.msg;
+        return;
+      }
+      panel.hidden = false;
+      const p = state.tab === "quiz" ? quizProgress() : progress();
       panel.innerHTML = state.tab === "quiz"
         ? `<div class="progress-head"><strong>Quizprogresjon</strong><span id="progressText">${p.done} / ${p.total} besvart (${p.pct}%)</span></div><div class="progress-track"><div class="progress-stack"><div class="progress-fill-ok" style="width:${p.pctOk}%"></div><div class="progress-fill-bad" style="width:${p.pctBad}%"></div></div></div><div class="progress-legend"><span class="legend-ok">Riktig: ${p.ok}</span><span class="legend-bad">Feil: ${p.bad}</span><span>Spørsmål: ${Math.min(state.quiz.i + 1, p.total || 0)} / ${p.total}</span></div><div class="status" role="status">${state.msg}</div>`
         : `<div class="progress-head"><strong>Progresjon</strong><span id="progressText">${p.done} / ${p.total} vurdert (${p.pct}%)</span></div><div class="progress-track"><div class="progress-stack"><div class="progress-fill-ok" style="width:${p.pctOk}%"></div><div class="progress-fill-bad" style="width:${p.pctBad}%"></div></div></div><div class="progress-legend"><span class="legend-ok">Riktig: ${p.kan}</span><span class="legend-bad">Feil: ${p.ov}</span><span>Favoritter: ${p.liked}</span></div><div class="status" role="status">${state.msg}</div>`;

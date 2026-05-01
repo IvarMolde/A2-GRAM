@@ -6,20 +6,18 @@ test('shows app title and rule card', async ({ page }) => {
   await expect(page.getByRole('heading', { name: /Helsetning \(V2\)/ })).toBeVisible();
 });
 
-test('can mark a rule with ov mer and see progress change', async ({ page }) => {
+test('progress bar is only shown in quiz mode', async ({ page }) => {
   await page.goto('/');
-
-  await expect(page.locator('#progressText')).toContainText('0 / 40');
-
-  await page.getByRole('button', { name: 'Øv mer' }).click();
-
-  await expect(page.locator('#progressText')).toContainText('1 / 40');
+  await expect(page.locator('#progressPanel')).toBeHidden();
+  await page.locator('[data-id="quiz"]').click();
+  await expect(page.locator('#progressPanel')).toBeVisible();
+  await expect(page.locator('#progressText')).toContainText('0 / 40 besvart');
 });
 
-test('heart in card header saves as favorite', async ({ page }) => {
+test('heart in card header toggles favorite state', async ({ page }) => {
   await page.goto('/');
   await page.locator('#topLike').click();
-  await expect(page.getByText('Favoritter: 1')).toBeVisible();
+  await expect(page.locator('#topLike')).toContainText('♥');
 });
 
 test('quiz tab renders question content', async ({ page }) => {
