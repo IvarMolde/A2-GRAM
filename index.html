@@ -497,6 +497,21 @@
           e: rule.r
         };
       }
+      if (rule.id === 34) {
+        return {
+          qid: `r${rule.id}`,
+          id: rule.id,
+          type: "choice",
+          p: "Velg riktig setning",
+          c: "Hun er lei seg for at hun ikke kommer",
+          o: [
+            "Hun er lei seg for at hun ikke kommer",
+            "Hun er lei seg for at hun kommer ikke",
+            "Hun er lei seg ikke for at hun ikke kommer"
+          ],
+          e: rule.r
+        };
+      }
       const type = rule.id % 2 === 0 ? "fill" : "choice";
       if (type === "fill") {
         const target = getFillTarget(rule);
