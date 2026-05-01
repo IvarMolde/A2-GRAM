@@ -28,6 +28,7 @@ test('quiz tab renders question content', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Quizmodus' })).toBeVisible();
   await expect(page.getByText('Spørsmål 1 av')).toBeVisible();
   await expect(page.getByText('Ikke svart ennå')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Start på nytt' })).toBeVisible();
 });
 
 test('fill-in quiz uses clickable word options', async ({ page }) => {

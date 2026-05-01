@@ -214,9 +214,19 @@
     }
 
     function opt(rule) { const p = [rule.c, rule.m, rule.ex[0]].filter((v, i, arr) => arr.indexOf(v) === i); const s = rule.id % p.length; return p.map((_, i) => p[(i + s) % p.length]); }
+    function shuffleList(list) {
+      const arr = list.slice();
+      for (let i = arr.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const tmp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = tmp;
+      }
+      return arr;
+    }
     function startQuiz(scope) {
       const base = scope === "needs" ? RULES.filter((r) => user(r.id).d === "ov") : RULES.slice();
-      const src = base.length ? base : RULES.slice();
+      const src = shuffleList(base.length ? base : RULES.slice());
       state.quiz = {
         scope,
         list: src.map((r) => buildQuizItem(r)),
@@ -341,7 +351,7 @@
         <p class="muted">Spørsmål ${state.quiz.i + 1} av ${state.quiz.list.length}</p>
         <h2 class="title">Quizmodus</h2>
         ${resultBanner}
-        <div class="chips"><span class="chip">${state.quiz.scope === "needs" ? "Øv mer-fokus" : "Alle regler"}</span><button class="btn" id="allQ">Alle regler</button><button class="btn" id="needsQ">Bare Øv mer</button></div>
+        <div class="chips"><span class="chip">${state.quiz.scope === "needs" ? "Øv mer-fokus" : "Alle regler"}</span><button class="btn" id="allQ">Alle regler</button><button class="btn" id="needsQ">Bare Øv mer</button><button class="btn primary" id="restartTop">Start på nytt</button></div>
         <p><strong>${q.p}</strong></p>
         ${q.type === "choice"
           ? `<div class="actions">${q.o.map((o, i) => `<button class="btn" data-o="${i}" ${ans ? "disabled" : ""}>${o}</button>`).join("")}</div>`
@@ -399,6 +409,8 @@
       if (next) next.addEventListener("click", () => { state.quiz.i += 1; render(); });
       const restart = document.getElementById("restart"), needs = document.getElementById("needs");
       if (restart) restart.addEventListener("click", () => { startQuiz(state.quiz.scope); render(); });
+      const restartTop = document.getElementById("restartTop");
+      if (restartTop) restartTop.addEventListener("click", () => { startQuiz(state.quiz.scope); render(); });
       if (needs) needs.addEventListener("click", () => { startQuiz("needs"); render(); });
       const allQ = document.getElementById("allQ"), needsQ = document.getElementById("needsQ");
       if (allQ) allQ.addEventListener("click", () => { startQuiz("all"); render(); });
