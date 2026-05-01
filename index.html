@@ -716,7 +716,6 @@
         <p class="muted">Spørsmål ${state.quiz.i + 1} av ${state.quiz.list.length}</p>
         <h2 class="title">Quizmodus</h2>
         ${resultBanner}
-        <div class="chips"><span class="chip">${state.quiz.scope === "needs" ? "Øv mer-fokus" : "Alle regler"}</span></div>
         <p><strong>${q.p}</strong></p>
         ${q.type === "choice"
           ? `<div class="actions">${q.o.map((o, i) => `<button class="btn" data-o="${i}" ${ans ? "disabled" : ""}>${o}</button>`).join("")}</div>`
