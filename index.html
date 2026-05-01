@@ -482,6 +482,21 @@
           e: rule.r
         };
       }
+      if (rule.id === 33) {
+        return {
+          qid: `r${rule.id}`,
+          id: rule.id,
+          type: "choice",
+          p: "Velg riktig setning",
+          c: "Jeg er hjemme fordi jeg ikke er frisk",
+          o: [
+            "Jeg er hjemme fordi jeg ikke er frisk",
+            "Jeg hjemme er fordi jeg frisk ikke er",
+            "JEg er hjemme fordi jeg er frisk er ikke"
+          ],
+          e: rule.r
+        };
+      }
       const type = rule.id % 2 === 0 ? "fill" : "choice";
       if (type === "fill") {
         const target = getFillTarget(rule);
