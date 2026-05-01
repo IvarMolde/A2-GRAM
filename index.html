@@ -353,6 +353,17 @@
           e: rule.r
         };
       }
+      if (rule.id === 17) {
+        return {
+          qid: `r${rule.id}`,
+          id: rule.id,
+          type: "choice",
+          p: "Velg riktig setning",
+          c: "Jeg har bodd i Norge i to år.",
+          o: ["Jeg har bodde i Norge.", "Jeg har bodd i Norge i to år."],
+          e: rule.r
+        };
+      }
       const type = rule.id % 2 === 0 ? "fill" : "choice";
       if (type === "fill") {
         const target = getFillTarget(rule);
