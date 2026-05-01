@@ -296,6 +296,17 @@
           e: rule.r
         };
       }
+      if (rule.id === 9) {
+        return {
+          qid: `r${rule.id}`,
+          id: rule.id,
+          type: "choice",
+          p: "Velg riktig setning",
+          c: "Jeg har to biler.",
+          o: ["Jeg har to bil.", "Jeg har to biler."],
+          e: rule.r
+        };
+      }
       const type = rule.id % 2 === 0 ? "fill" : "choice";
       if (type === "fill") {
         const target = getFillTarget(rule);
