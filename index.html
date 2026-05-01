@@ -423,6 +423,18 @@
           e: rule.r
         };
       }
+      if (rule.id === 26) {
+        return {
+          qid: `r${rule.id}`,
+          id: rule.id,
+          type: "fill",
+          p: "Fyll inn riktig ord",
+          c: "meg",
+          sentence: "Kan du hjelpe ____?",
+          options: ["deg", "vi", "meg", "det"],
+          e: rule.r
+        };
+      }
       const type = rule.id % 2 === 0 ? "fill" : "choice";
       if (type === "fill") {
         const target = getFillTarget(rule);
