@@ -341,6 +341,18 @@
           e: rule.r
         };
       }
+      if (rule.id === 16) {
+        return {
+          qid: `r${rule.id}`,
+          id: rule.id,
+          type: "fill",
+          p: "Fyll inn riktig ord",
+          c: "snakket",
+          sentence: "Jeg _______ med tante i går",
+          options: ["å snakke", "snakket", "snakker", "har snakket"],
+          e: rule.r
+        };
+      }
       const type = rule.id % 2 === 0 ? "fill" : "choice";
       if (type === "fill") {
         const target = getFillTarget(rule);
