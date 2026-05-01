@@ -512,6 +512,21 @@
           e: rule.r
         };
       }
+      if (rule.id === 35) {
+        return {
+          qid: `r${rule.id}`,
+          id: rule.id,
+          type: "choice",
+          p: "Velg riktig setning",
+          c: "Jeg spiser når jeg kommer hjem",
+          o: [
+            "Jeg spiser når jeg hjem kommer",
+            "Jeg spiser når jeg kommer hjem",
+            "Jeg spiser når hjem jeg kommer"
+          ],
+          e: rule.r
+        };
+      }
       const type = rule.id % 2 === 0 ? "fill" : "choice";
       if (type === "fill") {
         const target = getFillTarget(rule);
