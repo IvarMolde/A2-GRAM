@@ -29,4 +29,5 @@ npx serve .
 
 ```bash
 npm test
+npm run test:e2e
 ```

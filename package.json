@@ -4,6 +4,10 @@
   "private": true,
   "description": "Tindergram A2 grammatikkapp",
   "scripts": {
-    "test": "node --test tests/static.test.js"
+    "test": "node --test tests/static.test.js",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.0"
   }
 }
