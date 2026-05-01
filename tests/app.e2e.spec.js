@@ -27,6 +27,7 @@ test('quiz tab renders question content', async ({ page }) => {
   await page.locator('[data-id="quiz"]').click();
   await expect(page.getByRole('heading', { name: 'Quizmodus' })).toBeVisible();
   await expect(page.getByText('Spørsmål 1 av')).toBeVisible();
+  await expect(page.getByText('Ikke svart ennå')).toBeVisible();
 });
 
 test('fill-in quiz uses clickable word options', async ({ page }) => {
@@ -34,6 +35,13 @@ test('fill-in quiz uses clickable word options', async ({ page }) => {
   await page.locator('[data-id="quiz"]').click();
   await page.getByRole('button', { name: 'Neste' }).click(); // question 2 is fill
   await expect(page.locator('.word-option').first()).toBeVisible();
+});
+
+test('quiz card shows colored result banner after answer', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('[data-id="quiz"]').click();
+  await page.locator('[data-o="0"]').click();
+  await expect(page.locator('.quiz-result-banner.ok, .quiz-result-banner.bad')).toBeVisible();
 });
 
 test('keyboard navigation can reach primary controls', async ({ page }) => {

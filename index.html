@@ -77,6 +77,24 @@
     .legend-ok { color: #166534; font-weight: 700; }
     .legend-bad { color: #991b1b; font-weight: 700; }
     .status { margin-top: .8rem; border-radius: .6rem; border: 1px solid #b8d9ea; background: #eef8ff; color: #0c4b70; min-height: 44px; padding: .55rem; }
+    .quiz-result-banner {
+      margin-top: .45rem;
+      border-radius: .6rem;
+      padding: .45rem .6rem;
+      font-weight: 700;
+      font-size: .92rem;
+      border: 1px solid transparent;
+    }
+    .quiz-result-banner.ok {
+      background: #e9f8ef;
+      border-color: #82d39d;
+      color: #166534;
+    }
+    .quiz-result-banner.bad {
+      background: #fdecec;
+      border-color: #ef9a9a;
+      color: #991b1b;
+    }
     .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
     .word-bank { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .6rem; }
     .word-option { min-height: 44px; padding: .4rem .8rem; border-radius: 999px; border: 2px solid var(--border); background: #fff; color: #17364b; font-weight: 700; cursor: pointer; }
@@ -316,9 +334,13 @@
       const q = state.quiz.list[state.quiz.i];
       if (!q) return `<h2 class="title">Quiz fullført</h2><p>Poeng: <strong>${state.quiz.score} av ${state.quiz.list.length}</strong></p><div class="actions"><button class="btn primary" id="restart">Start på nytt</button><button class="btn" id="needs">Bare Øv mer</button></div>`;
       const ans = state.quiz.answered[q.qid];
+      const resultBanner = ans
+        ? `<div class="quiz-result-banner ${ans.ok ? "ok" : "bad"}" role="status">${ans.ok ? "Riktig svar" : "Feil svar"}</div>`
+        : `<div class="quiz-result-banner" style="background:#f3f7fb;border-color:#d7e5f1;color:#1f3f57;" role="status">Ikke svart ennå</div>`;
       return `
         <p class="muted">Spørsmål ${state.quiz.i + 1} av ${state.quiz.list.length}</p>
         <h2 class="title">Quizmodus</h2>
+        ${resultBanner}
         <div class="chips"><span class="chip">${state.quiz.scope === "needs" ? "Øv mer-fokus" : "Alle regler"}</span><button class="btn" id="allQ">Alle regler</button><button class="btn" id="needsQ">Bare Øv mer</button></div>
         <p><strong>${q.p}</strong></p>
         ${q.type === "choice"
