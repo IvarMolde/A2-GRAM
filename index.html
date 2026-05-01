@@ -295,6 +295,18 @@
           e: rule.r
         };
       }
+      if (rule.id === 7) {
+        return {
+          qid: `r${rule.id}`,
+          id: rule.id,
+          type: "fill",
+          p: "Fyll inn riktig ord (negasjon i leddsetning).",
+          c: "jukset",
+          sentence: "Jeg vet at han ikke ____.",
+          options: ["en spiker", "gjorde", "jukset", "et tre"],
+          e: rule.r
+        };
+      }
       if (rule.id === 9) {
         return {
           qid: `r${rule.id}`,
