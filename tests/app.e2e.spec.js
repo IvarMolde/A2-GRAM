@@ -21,7 +21,7 @@ test('can mark a rule and see progress change', async ({ page }) => {
 test('heart in card header saves as favorite', async ({ page }) => {
   await page.goto('/');
   await page.locator('#topLike').click();
-  const favoritesCount = page.locator('#sidePanel .stat strong').nth(3);
+  const favoritesCount = page.locator('#sidePanel .stat strong').nth(2);
   await expect(favoritesCount).toContainText('1');
 });
 
@@ -46,19 +46,26 @@ test('keyboard navigation can reach primary controls', async ({ page }) => {
   await page.keyboard.press('Tab'); // first tab button
   await page.keyboard.press('Tab'); // second tab button
   await page.keyboard.press('Tab'); // third tab button
-  await page.keyboard.press('Tab'); // fourth tab button
-  await page.keyboard.press('Tab'); // fifth tab button
   await page.keyboard.press('Tab'); // first card control (heart)
   await expect(page.locator(':focus')).toHaveAttribute('id', 'topLike');
 });
 
-test('arrow keys navigate forward and backward', async ({ page }) => {
+test('arrow keys navigate with left-forward right-back', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { name: /Helsetning \(V2\)/ })).toBeVisible();
 
-  await page.keyboard.press('ArrowRight');
+  await page.keyboard.press('ArrowLeft');
   await expect(page.getByRole('heading', { name: /Inversjon/ })).toBeVisible();
 
-  await page.keyboard.press('ArrowLeft');
+  await page.keyboard.press('ArrowRight');
+  await expect(page.getByRole('heading', { name: /Helsetning \(V2\)/ })).toBeVisible();
+});
+
+test('favorites list opens selected favorited card', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('#topLike').click();
+  await page.locator('[data-id="liked"]').click();
+  await page.getByRole('button', { name: 'Åpne kort' }).click();
+  await expect(page.locator('[data-id="learn"]')).toHaveAttribute('aria-selected', 'true');
   await expect(page.getByRole('heading', { name: /Helsetning \(V2\)/ })).toBeVisible();
 });
