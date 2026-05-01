@@ -18,6 +18,13 @@ test('can mark a rule and see progress change', async ({ page }) => {
   await expect(after).toContainText('1');
 });
 
+test('heart in card header saves as favorite', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('#topLike').click();
+  const favoritesCount = page.locator('#sidePanel .stat strong').nth(3);
+  await expect(favoritesCount).toContainText('1');
+});
+
 test('quiz tab renders question content', async ({ page }) => {
   await page.goto('/');
   await page.locator('[data-id="quiz"]').click();
@@ -34,9 +41,8 @@ test('keyboard navigation can reach primary controls', async ({ page }) => {
   await page.keyboard.press('Tab'); // third tab button
   await page.keyboard.press('Tab'); // fourth tab button
   await page.keyboard.press('Tab'); // fifth tab button
-  await page.keyboard.press('Tab'); // first card control
-
-  await expect(page.locator(':focus')).toHaveText(/Forrige|Angre|Gjør om/);
+  await page.keyboard.press('Tab'); // first card control (heart)
+  await expect(page.locator(':focus')).toHaveAttribute('id', 'topLike');
 });
 
 test('arrow keys navigate forward and backward', async ({ page }) => {

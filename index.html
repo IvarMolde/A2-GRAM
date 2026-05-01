@@ -33,6 +33,25 @@
     .grid { width: min(1100px, 100%); margin: 0 auto; display: grid; gap: 1rem; grid-template-columns: 1fr; }
     @media (min-width: 960px) { .grid { grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr); } }
     .card { background: var(--surface); border: 1px solid var(--border); border-radius: 1rem; padding: 1rem; box-shadow: 0 8px 24px rgba(0,0,0,.08); }
+    .rule-card { position: relative; }
+    .card-heart {
+      position: absolute;
+      right: 1rem;
+      top: 1rem;
+      width: 44px;
+      height: 44px;
+      border-radius: 999px;
+      border: 2px solid var(--border);
+      background: #fff;
+      color: #a11b4b;
+      font-size: 1.3rem;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .card-heart.active {
+      background: #ffe8f1;
+      border-color: #d86a93;
+    }
     .title { margin: .2rem 0 .6rem; font-size: clamp(1.1rem, 2.8vw, 1.45rem); }
     .muted { color: var(--muted); font-size: .95rem; }
     .chips { display: flex; flex-wrap: wrap; gap: .45rem; margin-bottom: .7rem; }
@@ -227,6 +246,7 @@
       if (!r) return `<h2 class="title">Ingen synlige regler</h2><p class="muted">Gå til "Skjult" for å vise regler igjen.</p>`;
       const u = user(r.id);
       return `
+        <button class="card-heart ${u.liked ? "active" : ""}" id="topLike" aria-label="${u.liked ? "Fjern fra favoritter" : "Lagre som favoritt"}" title="${u.liked ? "Fjern fra favoritter" : "Lagre som favoritt"}">${u.liked ? "♥" : "♡"}</button>
         <p class="muted">Kort ${state.i + 1} av ${visible().length} (totalt 40)</p>
         <h2 class="title">${r.id}. ${r.t}</h2>
         <div class="chips"><span class="chip">A2</span><span class="chip">CEFR</span><span class="chip">${u.d === "kan" ? "Kan" : u.d === "ov" ? "Øv mer" : "Ikke vurdert"}</span></div>
@@ -268,7 +288,8 @@
     }
     function renderMain() {
       const m = document.getElementById("mainPanel");
-      if (state.tab === "learn") { const r = cur(); m.innerHTML = learnHTML(r); bindLearn(r); return; }
+      if (state.tab === "learn") { const r = cur(); m.classList.add("rule-card"); m.innerHTML = learnHTML(r); bindLearn(r); return; }
+      m.classList.remove("rule-card");
       if (state.tab === "quiz") { m.innerHTML = quizHTML(); bindQuiz(); return; }
       if (state.tab === "saved") { m.innerHTML = listHTML((r) => user(r.id).saved, "Lagret", "Regler du har lagret.", "data-unsave", "Fjern"); m.querySelectorAll("[data-unsave]").forEach((b) => b.addEventListener("click", () => tSave(Number(b.dataset.unsave)))); return; }
       if (state.tab === "liked") { m.innerHTML = listHTML((r) => user(r.id).liked, "Favoritter", "Regler du har hjertemerket.", "data-unlike", "Fjern"); m.querySelectorAll("[data-unlike]").forEach((b) => b.addEventListener("click", () => tLike(Number(b.dataset.unlike)))); return; }
@@ -280,6 +301,7 @@
       const on = (id, fn) => { const el = document.getElementById(id); if (el) el.addEventListener("click", fn); };
       on("kan", () => decide(r.id, "kan")); on("ov", () => decide(r.id, "ov"));
       on("save", () => tSave(r.id)); on("like", () => tLike(r.id)); on("hide", () => hide(r.id));
+      on("topLike", () => tLike(r.id));
       on("next", nextCard); on("prev", prevCard);
       on("undo", undo); on("redo", redo);
     }
