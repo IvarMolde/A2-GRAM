@@ -70,7 +70,12 @@
     .progress-wrap { border: 1px solid var(--border); border-radius: .8rem; background: #fff; padding: .5rem .55rem; position: sticky; top: .3rem; z-index: 3; }
     .progress-head { display: flex; justify-content: space-between; align-items: center; gap: .5rem; font-size: .9rem; color: var(--muted); }
     .progress-track { margin-top: .45rem; height: 10px; border-radius: 999px; background: #e6eef5; overflow: hidden; }
-    .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #0b5d88, #5ea6cb); transition: width .2s ease; }
+    .progress-stack { display: flex; height: 100%; width: 100%; }
+    .progress-fill-ok { height: 100%; width: 0%; background: #1f9d55; transition: width .2s ease; }
+    .progress-fill-bad { height: 100%; width: 0%; background: #d64545; transition: width .2s ease; }
+    .progress-legend { display: flex; justify-content: space-between; align-items: center; gap: .6rem; margin-top: .45rem; font-size: .88rem; color: var(--muted); flex-wrap: wrap; }
+    .legend-ok { color: #166534; font-weight: 700; }
+    .legend-bad { color: #991b1b; font-weight: 700; }
     .status { margin-top: .8rem; border-radius: .6rem; border: 1px solid #b8d9ea; background: #eef8ff; color: #0c4b70; min-height: 44px; padding: .55rem; }
     .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
     .word-bank { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .6rem; }
@@ -269,7 +274,9 @@
       const total = RULES.length;
       const done = s.kan + s.ov;
       const pct = Math.round((done / total) * 100);
-      return { ...s, total, done, pct };
+      const pctOk = Math.round((s.kan / total) * 100);
+      const pctBad = Math.round((s.ov / total) * 100);
+      return { ...s, total, done, pct, pctOk, pctBad };
     }
     function openFavorite(ruleId) {
       const idx = visible().findIndex((r) => r.id === ruleId);
@@ -378,7 +385,7 @@
     function renderProgress() {
       const p = progress();
       const panel = document.getElementById("progressPanel");
-      panel.innerHTML = `<div class="progress-head"><strong>Progresjon</strong><span id="progressText">${p.done} / ${p.total} vurdert (${p.pct}%)</span></div><div class="progress-track"><div class="progress-fill" style="width:${p.pct}%"></div></div><div class="progress-head" style="margin-top:.45rem;"><span>Kan: ${p.kan} · Øv mer: ${p.ov}</span><span>Favoritter: ${p.liked}</span></div><div class="status" role="status">${state.msg}</div>`;
+      panel.innerHTML = `<div class="progress-head"><strong>Progresjon</strong><span id="progressText">${p.done} / ${p.total} vurdert (${p.pct}%)</span></div><div class="progress-track"><div class="progress-stack"><div class="progress-fill-ok" style="width:${p.pctOk}%"></div><div class="progress-fill-bad" style="width:${p.pctBad}%"></div></div></div><div class="progress-legend"><span class="legend-ok">Riktig: ${p.kan}</span><span class="legend-bad">Feil: ${p.ov}</span><span>Favoritter: ${p.liked}</span></div><div class="status" role="status">${state.msg}</div>`;
       const announcer = document.getElementById("srAnnouncer");
       if (announcer) announcer.textContent = state.msg;
     }
