@@ -364,6 +364,17 @@
           e: rule.r
         };
       }
+      if (rule.id === 15) {
+        return {
+          qid: `r${rule.id}`,
+          id: rule.id,
+          type: "choice",
+          p: "Velg riktig setning",
+          c: "Jeg jobber i en butikk.",
+          o: ["Jeg jobb i en butikk.", "Jeg jobber i en butikk."],
+          e: rule.r
+        };
+      }
       if (rule.id === 16) {
         return {
           qid: `r${rule.id}`,
@@ -708,14 +719,14 @@
         <p class="muted">Spørsmål ${state.quiz.i + 1} av ${state.quiz.list.length}</p>
         <h2 class="title">Quizmodus</h2>
         ${resultBanner}
-        <div class="chips"><span class="chip">${state.quiz.scope === "needs" ? "Øv mer-fokus" : "Alle regler"}</span><button class="btn" id="allQ">Alle regler</button><button class="btn" id="needsQ">Bare Øv mer</button><button class="btn primary" id="restartTop">Start på nytt</button></div>
+        <div class="chips"><span class="chip">${state.quiz.scope === "needs" ? "Øv mer-fokus" : "Alle regler"}</span></div>
         <p><strong>${q.p}</strong></p>
         ${q.type === "choice"
           ? `<div class="actions">${q.o.map((o, i) => `<button class="btn" data-o="${i}" ${ans ? "disabled" : ""}>${o}</button>`).join("")}</div>`
           : `<div class="box"><p class="muted">Setning:</p><p><strong>${q.sentence}</strong></p><p class="muted">Velg ordet som passer best i konteksten:</p><div class="word-bank">${q.options.map((opt, i) => `<button class="word-option" data-fo="${i}" ${ans ? "disabled" : ""}>${opt}</button>`).join("")}</div></div>`
         }
         <div class="status">${ans ? ans.msg : "Velg ett svar."}</div>
-        <div class="actions"><button class="btn" id="qPrev" ${state.quiz.i === 0 ? "disabled" : ""}>Forrige</button><button class="btn primary" id="qNext">${state.quiz.i >= state.quiz.list.length - 1 ? "Vis resultat" : "Neste"}</button></div>
+        <div class="actions3"><button class="btn" id="qPrev" ${state.quiz.i === 0 ? "disabled" : ""}>Forrige</button><button class="btn primary" id="qNext">${state.quiz.i >= state.quiz.list.length - 1 ? "Vis resultat" : "Neste"}</button><button class="btn" id="restartBottom">Start på nytt</button></div>
       `;
     }
     function listHTML(filter, title, txt, dAttr, btn) {
@@ -762,12 +773,9 @@
       if (next) next.addEventListener("click", () => { state.quiz.i += 1; render(); });
       const restart = document.getElementById("restart"), needs = document.getElementById("needs");
       if (restart) restart.addEventListener("click", () => { startQuiz(state.quiz.scope); render(); });
-      const restartTop = document.getElementById("restartTop");
-      if (restartTop) restartTop.addEventListener("click", () => { startQuiz(state.quiz.scope); render(); });
+      const restartBottom = document.getElementById("restartBottom");
+      if (restartBottom) restartBottom.addEventListener("click", () => { startQuiz(state.quiz.scope); render(); });
       if (needs) needs.addEventListener("click", () => { startQuiz("needs"); render(); });
-      const allQ = document.getElementById("allQ"), needsQ = document.getElementById("needsQ");
-      if (allQ) allQ.addEventListener("click", () => { startQuiz("all"); render(); });
-      if (needsQ) needsQ.addEventListener("click", () => { startQuiz("needs"); render(); });
     }
     function renderProgress() {
       const p = state.tab === "quiz" ? quizProgress() : progress();
