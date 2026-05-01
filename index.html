@@ -29,10 +29,10 @@
     .tabs { margin-top: .8rem; display: flex; flex-wrap: wrap; gap: .5rem; }
     .tab { min-height: 44px; border: 2px solid #cfe4f0; border-radius: .7rem; background: #fff; color: #11384e; font-weight: 700; padding: .55rem .8rem; cursor: pointer; }
     .tab[aria-selected="true"] { background: var(--primary); color: #fff; border-color: var(--primary); }
-    main { padding: 1rem; }
-    footer { text-align: center; color: var(--muted); font-size: .9rem; padding: .8rem 1rem 1.2rem; }
-    .grid { width: min(900px, 100%); margin: 0 auto; display: grid; gap: .75rem; grid-template-columns: 1fr; }
-    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 1rem; padding: 1rem; box-shadow: 0 8px 24px rgba(0,0,0,.08); }
+    main { padding: .55rem; }
+    footer { text-align: center; color: var(--muted); font-size: .86rem; padding: .65rem 1rem .95rem; }
+    .grid { width: min(900px, 100%); margin: 0 auto; display: grid; gap: .5rem; grid-template-columns: 1fr; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 1rem; padding: .78rem; box-shadow: 0 8px 24px rgba(0,0,0,.08); }
     .rule-card { position: relative; }
     .card-heart {
       position: absolute;
@@ -52,22 +52,22 @@
       background: #ffe8f1;
       border-color: #d86a93;
     }
-    .title { margin: .2rem 0 .6rem; font-size: clamp(1.1rem, 2.8vw, 1.45rem); }
-    .muted { color: var(--muted); font-size: .95rem; }
-    .chips { display: flex; flex-wrap: wrap; gap: .45rem; margin-bottom: .7rem; }
+    .title { margin: .1rem 0 .45rem; font-size: clamp(1.02rem, 2.7vw, 1.4rem); }
+    .muted { color: var(--muted); font-size: .9rem; }
+    .chips { display: flex; flex-wrap: wrap; gap: .34rem; margin-bottom: .45rem; }
     .chip { border-radius: 99px; padding: .3rem .65rem; background: #eef4fa; border: 1px solid #d8e3ec; font-size: .85rem; }
-    .box { border-radius: .7rem; border: 1px solid #d8e7f3; background: #f8fbff; padding: .7rem; margin-top: .7rem; }
-    .warn { border-left: 4px solid var(--warn); background: #fff8ea; border-radius: .5rem; padding: .65rem; margin-top: .7rem; }
-    .ok { border-left: 4px solid var(--ok); background: #edf8f2; border-radius: .5rem; padding: .65rem; margin-top: .5rem; }
-    .actions { display: grid; gap: .55rem; grid-template-columns: repeat(2, minmax(0,1fr)); margin-top: .85rem; }
-    .actions3 { display: grid; gap: .55rem; grid-template-columns: repeat(3, minmax(0,1fr)); margin-top: .85rem; }
+    .box { border-radius: .7rem; border: 1px solid #d8e7f3; background: #f8fbff; padding: .52rem; margin-top: .45rem; }
+    .warn { border-left: 4px solid var(--warn); background: #fff8ea; border-radius: .5rem; padding: .5rem; margin-top: .45rem; }
+    .ok { border-left: 4px solid var(--ok); background: #edf8f2; border-radius: .5rem; padding: .5rem; margin-top: .35rem; }
+    .actions { display: grid; gap: .42rem; grid-template-columns: repeat(2, minmax(0,1fr)); margin-top: .6rem; }
+    .actions3 { display: grid; gap: .42rem; grid-template-columns: repeat(3, minmax(0,1fr)); margin-top: .6rem; }
     button.btn { min-height: 44px; border-radius: .7rem; border: 2px solid var(--border); background: #fff; color: #17364b; font-weight: 700; cursor: pointer; }
     button.btn.primary { background: var(--primary); color: #fff; border-color: var(--primary); }
     button.btn.primary:hover { background: var(--primary-dark); }
     .list { list-style: none; padding: 0; margin: .7rem 0 0; display: grid; gap: .55rem; }
     .list li { border: 1px solid var(--border); border-radius: .7rem; padding: .6rem; }
     .row { display: flex; gap: .5rem; justify-content: space-between; align-items: center; flex-wrap: wrap; }
-    .progress-wrap { border: 1px solid var(--border); border-radius: .8rem; background: #fff; padding: .65rem; }
+    .progress-wrap { border: 1px solid var(--border); border-radius: .8rem; background: #fff; padding: .5rem .55rem; position: sticky; top: .3rem; z-index: 3; }
     .progress-head { display: flex; justify-content: space-between; align-items: center; gap: .5rem; font-size: .9rem; color: var(--muted); }
     .progress-track { margin-top: .45rem; height: 10px; border-radius: 999px; background: #e6eef5; overflow: hidden; }
     .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #0b5d88, #5ea6cb); transition: width .2s ease; }
@@ -78,6 +78,21 @@
     .word-option:hover { border-color: #7ea7bf; }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+    }
+    @media (min-width: 768px) {
+      main { padding: 1rem; }
+      footer { font-size: .9rem; padding: .8rem 1rem 1.2rem; }
+      .grid { gap: .75rem; }
+      .card { padding: 1rem; }
+      .title { margin: .2rem 0 .6rem; font-size: clamp(1.1rem, 2.8vw, 1.45rem); }
+      .muted { font-size: .95rem; }
+      .chips { gap: .45rem; margin-bottom: .7rem; }
+      .box { padding: .7rem; margin-top: .7rem; }
+      .warn { padding: .65rem; margin-top: .7rem; }
+      .ok { padding: .65rem; margin-top: .5rem; }
+      .actions { gap: .55rem; margin-top: .85rem; }
+      .actions3 { gap: .55rem; margin-top: .85rem; }
+      .progress-wrap { position: static; padding: .65rem; }
     }
   </style>
 </head>
