@@ -2,7 +2,7 @@ const { test, expect } = require('@playwright/test');
 
 test('shows app title and rule card', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'Tindergram' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'A2-GRAM' })).toBeVisible();
   await expect(page.getByRole('heading', { name: /Helsetning \(V2\)/ })).toBeVisible();
 });
 

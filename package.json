@@ -1,8 +1,8 @@
 {
-  "name": "tindergram",
+  "name": "a2-gram",
   "version": "1.0.0",
   "private": true,
-  "description": "Tindergram A2 grammatikkapp",
+  "description": "A2-GRAM A2 grammatikkapp",
   "scripts": {
     "test": "node --test tests/static.test.js",
     "test:e2e": "playwright test"

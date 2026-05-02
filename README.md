@@ -1,4 +1,4 @@
-# Tindergram
+# A2-GRAM
 
 Responsiv grammatikkapp for voksne deltakere på norsk nivå A2 (CEFR), med sveipelogikk inspirert av Tinder.
 
