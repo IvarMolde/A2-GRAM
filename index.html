@@ -147,7 +147,7 @@
     const STORE = "tindergram-a2-v1";
     const RULES = [
       { id: 1, t: "Helsetning (V2)", r: "I helsetning står verbet på plass 2.", ex: ["Jeg bor i Oslo.", "Vi lærer norsk."], m: "Jeg i Oslo bor.", c: "Jeg bor i Oslo." },
-      { id: 2, t: "Inversjon", r: "Når tid/sted står først, kommer verb før subjekt.", ex: ["I dag jobber jeg hjemme.", "På mandag skal vi ha prøve."], m: "I dag jeg jobber hjemme.", c: "I dag jobber jeg hjemme." },
+      { id: 2, t: "Inversjon", r: "Inversjon betyr at verbet kommer før subjektet når tidsadverbial eller stedsadverbial står først. Adverbial kan stå både først og sist i setningen.", ex: ["I dag jobber jeg hjemme.", "Jeg jobber hjemme i dag.", "I Oslo bor hun.", "Hun bor i Oslo."], m: "I dag jeg jobber hjemme.", c: "I dag jobber jeg hjemme." },
       { id: 3, t: "Ja/nei-spørsmål", r: "I ja/nei-spørsmål står verbet først.", ex: ["Bor du i Norge?", "Kommer han i morgen?"], m: "Du bor i Norge?", c: "Bor du i Norge?" },
       { id: 4, t: "Spørreord", r: "Etter spørreord kommer verb før subjekt.", ex: ["Hvor bor du?", "Når starter kurset?"], m: "Hvor du bor?", c: "Hvor bor du?" },
       { id: 5, t: "Negasjon i helsetning", r: "Ikke står vanligvis etter verbet.", ex: ["Jeg kommer ikke i dag.", "Hun snakker ikke engelsk."], m: "Jeg ikke kommer i dag.", c: "Jeg kommer ikke i dag." },
@@ -186,9 +186,9 @@
       { id: 38, t: "Sammenligning med enn", r: "Komparativ + enn.", ex: ["Kaffe er dyrere enn te.", "Norsk er lettere nå enn før."], m: "dyrere som te", c: "dyrere enn te" },
       { id: 39, t: "Gradbøying av adjektiv", r: "Positiv, komparativ, superlativ.", ex: ["stor - større - størst", "fin - finere - finest"], m: "mer stor", c: "større" },
       { id: 40, t: "Imperativ", r: "Imperativ brukes til oppfordring.", ex: ["Kom hit!", "Les teksten!"], m: "Du kom hit!", c: "Kom hit!" },
-      { id: 41, t: "Setningsstruktur 1", r: "Velg setningen med riktig ordstilling.", ex: ["I dag skal vi trene norsk."], m: "I dag vi skal trene norsk.", c: "I dag skal vi trene norsk." },
-      { id: 42, t: "Setningsstruktur 2", r: "Velg setningen med riktig ordstilling.", ex: ["Jeg vet at hun ikke kommer i kveld."], m: "Jeg vet at hun kommer ikke i kveld.", c: "Jeg vet at hun ikke kommer i kveld." },
-      { id: 43, t: "Setningsstruktur 3", r: "Velg setningen med riktig ordstilling.", ex: ["Når jeg kommer hjem, lager jeg middag."], m: "Når jeg kommer hjem, jeg lager middag.", c: "Når jeg kommer hjem, lager jeg middag." },
+      { id: 41, t: "Setningsstruktur 1", r: "Når tid står først, kommer verbet før subjektet. Tenk: tid + verb + subjekt.", ex: ["I dag skal vi trene norsk."], m: "I dag vi skal trene norsk.", c: "I dag skal vi trene norsk." },
+      { id: 42, t: "Setningsstruktur 2", r: "I leddsetning står ikke foran verbet. Tenk: ... at hun ikke kommer.", ex: ["Jeg vet at hun ikke kommer i kveld."], m: "Jeg vet at hun kommer ikke i kveld.", c: "Jeg vet at hun ikke kommer i kveld." },
+      { id: 43, t: "Setningsstruktur 3", r: "Etter leddsetning med komma kommer verbet før subjektet i helsetningen.", ex: ["Når jeg kommer hjem, lager jeg middag."], m: "Når jeg kommer hjem, jeg lager middag.", c: "Når jeg kommer hjem, lager jeg middag." },
       { id: 44, t: "Setningsstruktur 4", r: "Velg setningen med riktig ordstilling.", ex: ["Hun sa at hun hadde kjøpt en ny jakke."], m: "Hun sa at hun kjøpt hadde en ny jakke.", c: "Hun sa at hun hadde kjøpt en ny jakke." }
     ];
 
