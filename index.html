@@ -185,7 +185,11 @@
       { id: 37, t: "Det er / det blir", r: "Det er: nå. Det blir: endring/fremtid.", ex: ["Det er kaldt ute.", "Det blir varmt i morgen."], m: "Det blir kaldt nå.", c: "Det er kaldt nå." },
       { id: 38, t: "Sammenligning med enn", r: "Komparativ + enn.", ex: ["Kaffe er dyrere enn te.", "Norsk er lettere nå enn før."], m: "dyrere som te", c: "dyrere enn te" },
       { id: 39, t: "Gradbøying av adjektiv", r: "Positiv, komparativ, superlativ.", ex: ["stor - større - størst", "fin - finere - finest"], m: "mer stor", c: "større" },
-      { id: 40, t: "Imperativ", r: "Imperativ brukes til oppfordring.", ex: ["Kom hit!", "Les teksten!"], m: "Du kom hit!", c: "Kom hit!" }
+      { id: 40, t: "Imperativ", r: "Imperativ brukes til oppfordring.", ex: ["Kom hit!", "Les teksten!"], m: "Du kom hit!", c: "Kom hit!" },
+      { id: 41, t: "Setningsstruktur 1", r: "Velg setningen med riktig ordstilling.", ex: ["I dag skal vi trene norsk."], m: "I dag vi skal trene norsk.", c: "I dag skal vi trene norsk." },
+      { id: 42, t: "Setningsstruktur 2", r: "Velg setningen med riktig ordstilling.", ex: ["Jeg vet at hun ikke kommer i kveld."], m: "Jeg vet at hun kommer ikke i kveld.", c: "Jeg vet at hun ikke kommer i kveld." },
+      { id: 43, t: "Setningsstruktur 3", r: "Velg setningen med riktig ordstilling.", ex: ["Når jeg kommer hjem, lager jeg middag."], m: "Når jeg kommer hjem, jeg lager middag.", c: "Når jeg kommer hjem, lager jeg middag." },
+      { id: 44, t: "Setningsstruktur 4", r: "Velg setningen med riktig ordstilling.", ex: ["Hun sa at hun hadde kjøpt en ny jakke."], m: "Hun sa at hun kjøpt hadde en ny jakke.", c: "Hun sa at hun hadde kjøpt en ny jakke." }
     ];
 
     const state = { tab: "learn", i: 0, hist: [], redo: [], msg: "Sveip eller bruk knappene.", quiz: { scope: "all", list: [], i: 0, score: 0, answered: {} }, user: {} };
@@ -630,6 +634,66 @@
           e: rule.r
         };
       }
+      if (rule.id === 41) {
+        return {
+          qid: `r${rule.id}`,
+          id: rule.id,
+          type: "choice",
+          p: "Velg setningen med riktig struktur",
+          c: "I dag skal vi trene norsk.",
+          o: [
+            "I dag vi skal trene norsk.",
+            "I dag skal vi trene norsk.",
+            "I dag skal trene vi norsk."
+          ],
+          e: rule.r
+        };
+      }
+      if (rule.id === 42) {
+        return {
+          qid: `r${rule.id}`,
+          id: rule.id,
+          type: "choice",
+          p: "Velg setningen med riktig struktur",
+          c: "Jeg vet at hun ikke kommer i kveld.",
+          o: [
+            "Jeg vet at hun kommer ikke i kveld.",
+            "Jeg vet at hun ikke kommer i kveld.",
+            "Jeg vet at ikke hun kommer i kveld."
+          ],
+          e: rule.r
+        };
+      }
+      if (rule.id === 43) {
+        return {
+          qid: `r${rule.id}`,
+          id: rule.id,
+          type: "choice",
+          p: "Velg setningen med riktig struktur",
+          c: "Når jeg kommer hjem, lager jeg middag.",
+          o: [
+            "Når jeg kommer hjem, jeg lager middag.",
+            "Når jeg kommer hjem, lager jeg middag.",
+            "Når jeg hjem kommer, lager jeg middag."
+          ],
+          e: rule.r
+        };
+      }
+      if (rule.id === 44) {
+        return {
+          qid: `r${rule.id}`,
+          id: rule.id,
+          type: "choice",
+          p: "Velg setningen med riktig struktur",
+          c: "Hun sa at hun hadde kjøpt en ny jakke.",
+          o: [
+            "Hun sa at hun kjøpt hadde en ny jakke.",
+            "Hun sa at hun hadde kjøpt en ny jakke.",
+            "Hun sa at hadde hun kjøpt en ny jakke."
+          ],
+          e: rule.r
+        };
+      }
       const type = rule.id % 2 === 0 ? "fill" : "choice";
       if (type === "fill") {
         const target = getFillTarget(rule);
@@ -693,9 +757,8 @@
       const u = user(r.id);
       return `
         <button class="card-heart ${u.liked ? "active" : ""}" id="topLike" aria-label="${u.liked ? "Fjern fra favoritter" : "Lagre som favoritt"}" title="${u.liked ? "Fjern fra favoritter" : "Lagre som favoritt"}">${u.liked ? "♥" : "♡"}</button>
-        <p class="muted">Kort ${state.i + 1} av ${visible().length} (totalt 40)</p>
+        <p class="muted">Kort ${state.i + 1} av ${visible().length} (totalt ${RULES.length})</p>
         <h2 class="title">${r.id}. ${r.t}</h2>
-        <div class="chips"><span class="chip">A2</span><span class="chip">CEFR</span><span class="chip">${u.d === "kan" ? "Kan" : u.d === "ov" ? "Øv mer" : "Ikke vurdert"}</span></div>
         <p>${r.r}</p>
         <div class="box"><strong>Eksempler</strong><ul>${r.ex.map((x) => `<li>${x}</li>`).join("")}</ul></div>
         <div class="warn"><strong>Vanlig feil:</strong> ${r.m}</div>

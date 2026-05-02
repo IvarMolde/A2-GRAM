@@ -11,7 +11,7 @@ test('progress bar is only shown in quiz mode', async ({ page }) => {
   await expect(page.locator('#progressPanel')).toBeHidden();
   await page.locator('[data-id="quiz"]').click();
   await expect(page.locator('#progressPanel')).toBeVisible();
-  await expect(page.locator('#progressText')).toContainText('0 / 40 besvart');
+  await expect(page.locator('#progressText')).toContainText('0 / 44 besvart');
 });
 
 test('heart in card header toggles favorite state', async ({ page }) => {
