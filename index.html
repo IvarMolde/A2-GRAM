@@ -773,14 +773,15 @@
       const q = state.quiz.list[state.quiz.i];
       if (!q) return `<h2 class="title">Quiz fullført</h2><p>Poeng: <strong>${state.quiz.score} av ${state.quiz.list.length}</strong></p><div class="actions"><button class="btn primary" id="restart">Start på nytt</button><button class="btn" id="needs">Bare Øv mer</button></div>`;
       const ans = state.quiz.answered[q.qid];
+      const pedagogicTitle = q.p.replace(/\s*\([^)]*\)\.?/g, "").trim();
       const resultBanner = ans
         ? `<div class="quiz-result-banner ${ans.ok ? "ok" : "bad"}" role="status">${ans.ok ? "Riktig svar" : "Feil svar"}</div>`
         : `<div class="quiz-result-banner" style="background:#f3f7fb;border-color:#d7e5f1;color:#1f3f57;" role="status">Ikke svart ennå</div>`;
       return `
         <p class="muted">Spørsmål ${state.quiz.i + 1} av ${state.quiz.list.length}</p>
-        <h2 class="title">Quizmodus</h2>
+        <h2 class="title">${pedagogicTitle}</h2>
         ${resultBanner}
-        <p><strong>${q.p.replace(/\s*\([^)]*\)\.?/g, "").trim()}</strong></p>
+        <p class="muted">Les setningen nøye og velg det beste svaret.</p>
         ${q.type === "choice"
           ? `<div class="actions">${q.o.map((o, i) => `<button class="btn" data-o="${i}" ${ans ? "disabled" : ""}>${o}</button>`).join("")}</div>`
           : `<div class="box"><p class="muted">Setning:</p><p><strong>${q.sentence}</strong></p><p class="muted">Velg ordet som passer best i konteksten:</p><div class="word-bank">${q.options.map((opt, i) => `<button class="word-option" data-fo="${i}" ${ans ? "disabled" : ""}>${opt}</button>`).join("")}</div></div>`

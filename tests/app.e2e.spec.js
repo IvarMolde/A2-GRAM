@@ -23,7 +23,8 @@ test('heart in card header toggles favorite state', async ({ page }) => {
 test('quiz tab renders question content', async ({ page }) => {
   await page.goto('/');
   await page.locator('[data-id="quiz"]').click();
-  await expect(page.getByRole('heading', { name: 'Quizmodus' })).toBeVisible();
+  await expect(page.locator('#mainPanel h2.title')).toBeVisible();
+  await expect(page.locator('#mainPanel h2.title')).not.toHaveText('Quizmodus');
   await expect(page.getByText('Spørsmål 1 av')).toBeVisible();
   await expect(page.getByText('Ikke svart ennå')).toBeVisible();
   await expect(page.getByRole('button', { name: 'Start på nytt' })).toBeVisible();
