@@ -188,8 +188,7 @@
       { id: 40, t: "Imperativ", r: "Imperativ brukes til oppfordring.", ex: ["Kom hit!", "Les teksten!"], m: "Du kom hit!", c: "Kom hit!" },
       { id: 41, t: "Setningsstruktur 1", r: "Når tid står først, kommer verbet før subjektet. Tenk: tid + verb + subjekt.", ex: ["I dag skal vi trene norsk."], m: "I dag vi skal trene norsk.", c: "I dag skal vi trene norsk." },
       { id: 42, t: "Setningsstruktur 2", r: "I leddsetning står ikke foran verbet. Tenk: ... at hun ikke kommer.", ex: ["Jeg vet at hun ikke kommer i kveld."], m: "Jeg vet at hun kommer ikke i kveld.", c: "Jeg vet at hun ikke kommer i kveld." },
-      { id: 43, t: "Setningsstruktur 3", r: "Etter leddsetning med komma kommer verbet før subjektet i helsetningen.", ex: ["Når jeg kommer hjem, lager jeg middag."], m: "Når jeg kommer hjem, jeg lager middag.", c: "Når jeg kommer hjem, lager jeg middag." },
-      { id: 44, t: "Setningsstruktur 4", r: "Velg setningen med riktig ordstilling.", ex: ["Hun sa at hun hadde kjøpt en ny jakke."], m: "Hun sa at hun kjøpt hadde en ny jakke.", c: "Hun sa at hun hadde kjøpt en ny jakke." }
+      { id: 43, t: "Setningsstruktur 3", r: "Etter leddsetning med komma kommer verbet før subjektet i helsetningen.", ex: ["Når jeg kommer hjem, lager jeg middag."], m: "Når jeg kommer hjem, jeg lager middag.", c: "Når jeg kommer hjem, lager jeg middag." }
     ];
 
     const state = { tab: "learn", i: 0, hist: [], redo: [], msg: "Sveip eller bruk knappene.", quiz: { scope: "all", list: [], i: 0, score: 0, answered: {} }, user: {} };
@@ -675,21 +674,6 @@
             "Når jeg kommer hjem, jeg lager middag.",
             "Når jeg kommer hjem, lager jeg middag.",
             "Når jeg hjem kommer, lager jeg middag."
-          ],
-          e: rule.r
-        };
-      }
-      if (rule.id === 44) {
-        return {
-          qid: `r${rule.id}`,
-          id: rule.id,
-          type: "choice",
-          p: "Velg setningen med riktig struktur",
-          c: "Hun sa at hun hadde kjøpt en ny jakke.",
-          o: [
-            "Hun sa at hun kjøpt hadde en ny jakke.",
-            "Hun sa at hun hadde kjøpt en ny jakke.",
-            "Hun sa at hadde hun kjøpt en ny jakke."
           ],
           e: rule.r
         };
