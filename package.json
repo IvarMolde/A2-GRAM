@@ -2,7 +2,7 @@
   "name": "a2-gram",
   "version": "1.0.0",
   "private": true,
-  "description": "A2-GRAM A2 grammatikkapp",
+  "description": "A2-Gram – A2 grammatikkapp (bokmål)",
   "scripts": {
     "test": "node --test tests/static.test.js",
     "test:e2e": "playwright test"

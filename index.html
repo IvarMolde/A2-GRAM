@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>A2-GRAM - A2 grammatikk</title>
+  <title>A2-Gram – A2 grammatikk</title>
   <style>
     :root {
       --bg: #f3f6fa;
@@ -125,7 +125,7 @@
   <div class="sr-only" id="srAnnouncer" aria-live="polite"></div>
   <header>
     <div class="wrap">
-      <h1>A2-GRAM</h1>
+      <h1>A2-Gram</h1>
       <p class="sub">Grammatikkap på bokmål for voksne. Norsknivå A2.</p>
       <nav id="tabs" class="tabs" aria-label="Sider" role="tablist"></nav>
     </div>
@@ -144,14 +144,14 @@
       { id: "quiz", label: "Quiz" },
       { id: "liked", label: "Favoritter" },
     ];
-    const STORE = "tindergram-a2-v1";
+    const STORE = "a2-gram-app-v1";
     const RULES = [
       { id: 1, t: "Helsetning (V2)", r: "I helsetning står verbet på plass 2.", ex: ["Jeg bor i Oslo.", "Vi lærer norsk."], m: "Jeg i Oslo bor.", c: "Jeg bor i Oslo." },
       { id: 2, t: "Inversjon", r: "Inversjon betyr at verbet kommer før subjektet når tidsadverbial eller stedsadverbial står først. Adverbial kan stå både først og sist i setningen.", ex: ["I dag jobber jeg hjemme.", "Jeg jobber hjemme i dag.", "I Oslo bor hun.", "Hun bor i Oslo."], m: "I dag jeg jobber hjemme.", c: "I dag jobber jeg hjemme." },
       { id: 3, t: "Ja/nei-spørsmål", r: "I ja/nei-spørsmål står verbet først.", ex: ["Bor du i Norge?", "Kommer han i morgen?"], m: "Du bor i Norge?", c: "Bor du i Norge?" },
       { id: 4, t: "Spørreord", r: "Etter spørreord kommer verb før subjekt.", ex: ["Hvor bor du?", "Når starter kurset?"], m: "Hvor du bor?", c: "Hvor bor du?" },
       { id: 5, t: "Negasjon i helsetning", r: "Ikke står vanligvis etter verbet.", ex: ["Jeg kommer ikke i dag.", "Hun snakker ikke engelsk."], m: "Jeg ikke kommer i dag.", c: "Jeg kommer ikke i dag." },
-      { id: 6, t: "Negasjon i leddsetning", r: "I leddsetning står ikke før verbet.", ex: ["Jeg tror at hun ikke kommer.", "Han er hjemme fordi han ikke er syk."], m: "Hun kommer ikke.", c: "Hun ikke kommer." },
+      { id: 6, t: "Negasjon i leddsetning", r: "I helsetning står verbet på plass 2 og «ikke» etter verbet (Hun kommer ikke). Når setningen starter med subjunksjon som at, fordi, hvis eller når, får du leddsetning: da står «ikke» før det finitte verbet (… at hun ikke kommer). «Hun ikke kommer» uten slik innledning er ikke riktig norsk.", ex: ["Jeg tror at hun ikke kommer.", "Han er hjemme fordi han ikke er syk.", "Hun kommer ikke. (helsetning)"], m: "Jeg tror at hun kommer ikke.", c: "Jeg tror at hun ikke kommer." },
       { id: 7, t: "Ubestemt entall", r: "Bruk en/ei/et når noe er nytt.", ex: ["Jeg har en bil.", "Hun kjøper et brød."], m: "Jeg har bil.", c: "Jeg har en bil." },
       { id: 8, t: "Bestemt entall", r: "Bestemt form får -en/-a/-et.", ex: ["Bilen er ny.", "Huset er stort."], m: "Bil er ny.", c: "Bilen er ny." },
       { id: 9, t: "Ubestemt flertall", r: "Mange substantiv får -er i flertall.", ex: ["to biler", "mange elever"], m: "to bil", c: "to biler" },
@@ -303,11 +303,10 @@
         return {
           qid: `r${rule.id}`,
           id: rule.id,
-          type: "fill",
-          p: "Fyll inn riktig ord (negasjon i leddsetning).",
-          c: "jukset",
-          sentence: "Jeg vet at han ikke ____.",
-          options: ["en spiker", "gjorde", "jukset", "et tre"],
+          type: "choice",
+          p: "Velg riktig setning (ubestemt entall)",
+          c: "Jeg har en bil.",
+          o: ["Jeg har bil.", "Jeg har en bil."],
           e: rule.r
         };
       }
