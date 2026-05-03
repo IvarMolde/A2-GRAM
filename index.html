@@ -151,7 +151,7 @@
       { id: 3, t: "Ja/nei-spørsmål", r: "I ja/nei-spørsmål står verbet først.", ex: ["Bor du i Norge?", "Kommer han i morgen?"], m: "Du bor i Norge?", c: "Bor du i Norge?" },
       { id: 4, t: "Spørreord", r: "Etter spørreord kommer verb før subjekt.", ex: ["Hvor bor du?", "Når starter kurset?"], m: "Hvor du bor?", c: "Hvor bor du?" },
       { id: 5, t: "Negasjon i helsetning", r: "Ikke står vanligvis etter verbet.", ex: ["Jeg kommer ikke i dag.", "Hun snakker ikke engelsk."], m: "Jeg ikke kommer i dag.", c: "Jeg kommer ikke i dag." },
-      { id: 6, t: "Negasjon i leddsetning", r: "I helsetning står verbet på plass 2 og «ikke» etter verbet (Hun kommer ikke). Når setningen starter med subjunksjon som at, fordi, hvis eller når, får du leddsetning: da står «ikke» før det finitte verbet (… at hun ikke kommer). «Hun ikke kommer» uten slik innledning er ikke riktig norsk.", ex: ["Jeg tror at hun ikke kommer.", "Han er hjemme fordi han ikke er syk.", "Hun kommer ikke. (helsetning)"], m: "Jeg tror at hun kommer ikke.", c: "Jeg tror at hun ikke kommer." },
+      { id: 6, t: "Negasjon i leddsetning", r: "Når setningen starter med subjunksjon som at, fordi, hvis eller når, får du leddsetning: da står «ikke» før det finitte verbet.", ex: ["Hun sier at hun ikke liker pizza.", "Han er lei seg fordi du ikke ringte ham."], m: "Hun lurer på om du vil ikke være med på kafé.", c: "Hun lurer på om du ikke vil være med på kafé." },
       { id: 7, t: "Ubestemt entall", r: "Bruk en/ei/et når noe er nytt.", ex: ["Jeg har en bil.", "Hun kjøper et brød."], m: "Jeg har bil.", c: "Jeg har en bil." },
       { id: 8, t: "Bestemt entall", r: "Bestemt form får -en/-a/-et.", ex: ["Bilen er ny.", "Huset er stort."], m: "Bil er ny.", c: "Bilen er ny." },
       { id: 9, t: "Ubestemt flertall", r: "Mange substantiv får -er i flertall.", ex: ["to biler", "mange elever"], m: "to bil", c: "to biler" },
@@ -291,11 +291,10 @@
         return {
           qid: `r${rule.id}`,
           id: rule.id,
-          type: "fill",
-          p: "Fyll inn riktig ord (negasjon i leddsetning).",
-          c: "jukset",
-          sentence: "Jeg vet at han ikke ____.",
-          options: ["en spiker", "gjorde", "jukset", "et tre"],
+          type: "choice",
+          p: "Velg riktig setning (negasjon i leddsetning)",
+          c: "Hun lurer på om du ikke vil være med på kafé.",
+          o: ["Hun lurer på om du vil ikke være med på kafé.", "Hun lurer på om du ikke vil være med på kafé."],
           e: rule.r
         };
       }
