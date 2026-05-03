@@ -6,15 +6,14 @@ Responsiv grammatikkapp for voksne deltakere på norsk nivå A2 (CEFR), med svei
 
 ## Funksjoner
 
-- 40 A2-grammatikkregler på bokmål
-- Sveip høyre/venstre (touch + piltaster)
-- Knapper for `Kan`, `Øv mer`, `Lagre`, `Hjerte`, `Skjul`
-- Faner for lagret, favoritter og skjulte regler
-- Quizmodus med adaptiv repetisjon
-- Quiz med både flervalg og fyll inn ord
-- Tilgjengelighetsbaseline (WCAG): fokusmarkering, tastaturstøtte, skip-link, alternativ til sveip
-- CI med GitHub Actions som kjører statiske tester på push/PR
-- Automatisk deploy til GitHub Pages på push til `main`
+- **43** grammatikkregler på bokmål (ett kort per regel, nummerert 1–43)
+- **Sveip-fanen:** sveip venstre = neste kort, sveip høyre = forrige; piltaster ← og → fungerer på tastatur
+- **Forrige** / **Neste** på kortvisning og **hjerte** for å merke favorittkort
+- **Tre faner:** Sveip (enkeltvis kort), Quiz (**43** spørsmål med progresjon, f.eks. «0 / 43 besvart»), Favoritter (liste over kort du har merket med hjerte)
+- Quiz med både **flervalg** og **fyll inn ord**
+- Tilgjengelighet: tydelig fokusmarkering, skip-link («Hopp til innhold»), støtte for `prefers-reduced-motion`
+- CI med GitHub Actions (statiske tester + Playwright e2e på push/PR)
+- Automatisk deploy til **GitHub Pages** ved push til `main` ([live demo](https://ivarmolde.github.io/A2-GRAM/))
 
 ## Kjøring
 
