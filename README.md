@@ -1,10 +1,6 @@
 # A2-Gram
 
-**Appen heter A2-Gram** (i nettleseren og i overskrifter). På GitHub heter hovedrepositoriet **A2-GRAM** (store bokstaver i «GRAM») – det følger URL-en og GitHub Pages, ikke et annet produktnavn.
-
-**Kloning, issues og pull requests:** bruk [IvarMolde/A2-GRAM](https://github.com/IvarMolde/A2-GRAM).
-
-Det finnes i tillegg et repo under navnet [Tindergram](https://github.com/IvarMolde/Tindergram) i URL-en (samme kodehistorikk); nye arbeidskopier bør tas fra **A2-GRAM** over.
+**Appen heter A2-Gram** (i nettleseren og i overskrifter). Kildekode, issues og pull requests: [IvarMolde/A2-GRAM](https://github.com/IvarMolde/A2-GRAM). På GitHub heter repositoriet **A2-GRAM** (store bokstaver i «GRAM») – det følger URL-en og GitHub Pages, ikke et annet produktnavn.
 
 Responsiv grammatikkapp for voksne deltakere på norsk nivå A2 (CEFR), med sveipelogikk inspirert av Tinder.
 
